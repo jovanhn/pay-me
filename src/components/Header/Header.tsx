@@ -7,14 +7,15 @@ import {
     ShellBarItem,
     StandardListItem,
 } from "@ui5/webcomponents-react";
+import {useNavigate} from "react-router-dom";
 
 const Header = () => {
     const showPopover = Modals.useShowPopover();
-
+    const navigate = useNavigate()
     return(
         <ShellBar
             logo={<Icon name="monitor-payments" />}
-            onLogoClick={()=> {}}
+            onLogoClick={ () => navigate('/')}
             onProfileClick={() => {
                 showPopover({
                     opener: 'shellbar-avatar',
@@ -23,17 +24,14 @@ const Header = () => {
                     children: (<List separators="None" data-testid="userMenu">
                         <StandardListItem
                             icon="user-settings"
-                            onClick={() => {
-                            }}
+                            onClick={() => navigate('/profile')}
                             data-testid="userMenuSettings"
                         >
                             Profile Settings
                         </StandardListItem>
                         <StandardListItem
                             icon="log"
-                            onClick={() => {
-                            }
-                            }
+                            onClick={() => {}}
                         >
                             Logout
                         </StandardListItem>
@@ -53,6 +51,7 @@ const Header = () => {
         <ShellBarItem
             icon="home"
             text="Home"
+            onClick={ () => navigate('/')}
         />
     </ShellBar>
 )
