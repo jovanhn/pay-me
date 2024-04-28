@@ -8,10 +8,21 @@ import {
     StandardListItem,
 } from "@ui5/webcomponents-react";
 import {useNavigate} from "react-router-dom";
+import {googleLogout, TokenResponse} from "@react-oauth/google";
 
-const Header = () => {
+interface UserProps {
+    user: Omit<TokenResponse, "error" | "error_description" | "error_uri">
+    setUser: (userCreds: Omit<TokenResponse, "error" | "error_description" | "error_uri"> | undefined) => void
+}
+
+const Header = ({ setUser} : UserProps) => {
     const showPopover = Modals.useShowPopover();
     const navigate = useNavigate()
+
+    const logOut = () => {
+        googleLogout();
+        setUser(undefined)
+    };
     return(
         <ShellBar
             logo={<Icon name="monitor-payments" />}
@@ -31,7 +42,7 @@ const Header = () => {
                         </StandardListItem>
                         <StandardListItem
                             icon="log"
-                            onClick={() => {}}
+                            onClick={logOut}
                         >
                             Logout
                         </StandardListItem>
