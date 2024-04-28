@@ -11,10 +11,12 @@ import {
     Ui5CustomEvent, InputDomRef, SelectDomRef
 } from "@ui5/webcomponents-react";
 import {SelectChangeEventDetail} from "@ui5/webcomponents/dist/Select.js";
-import {useReducer} from "react";
+import {useEffect, useReducer} from "react";
 import {StandardFieldProps} from "../../interfaces/properties.tsx";
 import {UserProfile} from "../../interfaces/entities.tsx";
 import {UserInfoReducerParams} from "../../interfaces/parameters.tsx";
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import FirestoreApp from "../../firestore.tsx";
 
 
 const StandardField = ({editMode, value, inputType = InputType.Text, onInput, ...rest}: StandardFieldProps) => {
@@ -52,9 +54,12 @@ const sampleUser: UserProfile = {
     }
 }
 
+const testUser = 'test_user'
+
 const supportedBanks: string[] = ['None', 'Mobi', 'Intesa', 'NLB']
 
 const UserProfileDetailsForm = () => {
+
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
     const [formState, dispatch] = useReducer(
         reducer,
@@ -70,6 +75,35 @@ const UserProfileDetailsForm = () => {
             value: e.target.value
         });
     };
+
+    const fetchPost = async () => {
+
+        const db = getFirestore(FirestoreApp);
+        const docRef = doc(db, "users", testUser);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data() as UserProfile);
+        } else {
+            // docSnap.data() will be undefined in this case
+            console.log("No such document!");
+        }
+
+    }
+
+    useEffect(()=>{
+        fetchPost();
+    }, [])
+
+    const updateUserInfo = async () => {
+
+        const db = getFirestore(FirestoreApp);
+        try {
+             await setDoc(doc(db, "users", testUser), formState);
+            console.log("Document written with ID: ");
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+    }
 
     return (
         <>
@@ -124,7 +158,12 @@ const UserProfileDetailsForm = () => {
             <Button onClick={toggleEditMode}
                     design={editMode ? "Emphasized" : "Default"}>{editMode ? 'Save Changes' : 'Edit User Info'}</Button>
             {editMode ?
-                (<Button onClick={toggleEditMode} disabled={!editMode}>Cancel</Button>) : null}
+                (<Button onClick={() => {
+                    toggleEditMode()
+                    updateUserInfo().then(()=> {
+                        console.log("User info updated")
+                    }).catch((e)=> console.log(e)).finally(()=> console.log('Finally'))
+                }} disabled={!editMode}>Cancel</Button>) : null}
         </>
     );
 };

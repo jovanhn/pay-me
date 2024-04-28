@@ -15,7 +15,10 @@ function App() {
     const [user, setUser] = useState<Omit<TokenResponse, "error" | "error_description" | "error_uri">>();
 
     const login = useGoogleLogin({
-        onSuccess: (codeResponse) => setUser(codeResponse),
+        onSuccess: (codeResponse) => {
+            console.log(codeResponse)
+            setUser(codeResponse)
+        },
         onError: (error) => console.log('Login Failed:', error)
     });
 
