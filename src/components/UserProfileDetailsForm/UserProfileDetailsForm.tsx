@@ -11,11 +11,11 @@ import {
     Ui5CustomEvent, InputDomRef, SelectDomRef
 } from "@ui5/webcomponents-react";
 import {SelectChangeEventDetail} from "@ui5/webcomponents/dist/Select.js";
-import {useEffect, useReducer} from "react";
+import {useEffect, useReducer, useState} from "react";
 import {StandardFieldProps} from "../../interfaces/properties.tsx";
 import {UserProfile} from "../../interfaces/entities.tsx";
 import {UserInfoReducerParams} from "../../interfaces/parameters.tsx";
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import {getFirestore, doc, getDoc, setDoc} from "firebase/firestore";
 import FirestoreApp from "../../firestore.tsx";
 
 
@@ -27,7 +27,7 @@ const StandardField = ({editMode, value, inputType = InputType.Text, onInput, ..
 };
 
 
-const reducer = (state: UserProfile, {group, field, value}: UserInfoReducerParams): UserProfile => {
+const updateState = (state: UserProfile, {group, field, value}: UserInfoReducerParams): UserProfile => {
     let updatedState = {...state}
     switch (group) {
         case 'general':
@@ -61,20 +61,16 @@ const supportedBanks: string[] = ['None', 'Mobi', 'Intesa', 'NLB']
 const UserProfileDetailsForm = () => {
 
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
-    const [formState, dispatch] = useReducer(
-        reducer,
-        sampleUser,
-        undefined
-    );
-    const {generalInfo, bankInfo} = formState;
+    const [form, setForm] = useState<UserProfile>(sampleUser);
+    const {generalInfo, bankInfo} = form;
 
     const handleInput = (e: Ui5CustomEvent<InputDomRef> | Ui5CustomEvent<SelectDomRef, SelectChangeEventDetail>) => {
-        dispatch({
+        setForm(updateState(form, {
             group: Object.keys(e.target.dataset)[0],
             field: Object.keys(e.target.dataset)[1],
             value: e.target.value
-        });
-    };
+        }))
+    }
 
     const fetchPost = async () => {
 
@@ -83,6 +79,7 @@ const UserProfileDetailsForm = () => {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             console.log("Document data:", docSnap.data() as UserProfile);
+            setForm(docSnap.data() as UserProfile)
         } else {
             // docSnap.data() will be undefined in this case
             console.log("No such document!");
@@ -90,7 +87,7 @@ const UserProfileDetailsForm = () => {
 
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchPost();
     }, [])
 
@@ -98,7 +95,7 @@ const UserProfileDetailsForm = () => {
 
         const db = getFirestore(FirestoreApp);
         try {
-             await setDoc(doc(db, "users", testUser), formState);
+            await setDoc(doc(db, "users", testUser), form);
             console.log("Document written with ID: ");
         } catch (e) {
             console.error("Error adding document: ", e);
@@ -155,15 +152,27 @@ const UserProfileDetailsForm = () => {
                     </FormItem>
                 </FormGroup>
             </Form>
-            <Button onClick={toggleEditMode}
-                    design={editMode ? "Emphasized" : "Default"}>{editMode ? 'Save Changes' : 'Edit User Info'}</Button>
             {editMode ?
-                (<Button onClick={() => {
-                    toggleEditMode()
-                    updateUserInfo().then(()=> {
-                        console.log("User info updated")
-                    }).catch((e)=> console.log(e)).finally(()=> console.log('Finally'))
-                }} disabled={!editMode}>Cancel</Button>) : null}
+                (
+                    <>
+                        <Button
+                            onClick={() => {
+                                toggleEditMode()
+                                updateUserInfo().then(() => {
+                                    console.log("User info updated")
+                                }).catch((e) => console.log(e)).finally(() => console.log('Finally'))
+                            }}
+                            design="Emphasized">
+                            Save
+                        </Button>
+                        <Button onClick={toggleEditMode} disabled={!editMode}>
+                            Cancel
+                        </Button>
+                    </>
+                ) :
+                <Button onClick={toggleEditMode} design="Default">
+                    Edit User Info
+                </Button>}
         </>
     );
 };
