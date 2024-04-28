@@ -16,7 +16,6 @@ function App() {
 
     const login = useGoogleLogin({
         onSuccess: (codeResponse) => {
-            console.log(codeResponse)
             setUser(codeResponse)
         },
         onError: (error) => console.log('Login Failed:', error)
