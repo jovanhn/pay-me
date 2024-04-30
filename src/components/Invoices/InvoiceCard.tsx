@@ -1,35 +1,30 @@
 import {useState} from "react";
-import {Card, CardHeader, Icon, List, StandardListItem} from "@ui5/webcomponents-react";
-import {Invoice} from "../../interfaces/entities.tsx";
-const sampleInvoice: Invoice = {
-    id: '1',
-    items: [
-        {name: 'Hleb Durum', price: 199.0, count: 2}],
-    rawUrl: '',
-    createdAt: 'Apr 12, 2024',
-    price: 1923.0,
-    location: "Maxi NBG"
+import {Button, Card, CardHeader, Icon, List, StandardListItem} from "@ui5/webcomponents-react";
+import {Invoice, InvoiceItem} from "../../interfaces/entities.tsx";
+import {useDeleteInvoice} from "../../services/Invoices.tsx";
+import {useCurrentUser} from "../../auth/AuthProvider.tsx";
 
-}
 
-const InvoiceCard = () => {
+const InvoiceCard = ({data}: {data: Invoice}) => {
     const [opened, setOpened] = useState(false)
-
+    const {user} = useCurrentUser()
     const handleOpenClose = () => {
         setOpened(!opened)
     }
+
+    const handleDelete = (id: string) => {
+        useDeleteInvoice(user,id)
+    }
+
     return (
             <Card
                 header={
                     <CardHeader
                         avatar={<Icon name="basket"/>}
-                        status={sampleInvoice.createdAt}
-                        subtitleText={`${sampleInvoice.price} RSD`}
-                        titleText={sampleInvoice.location}
-                        onClick={handleOpenClose}
-                        onClickCapture={() => {
-                            handleOpenClose()
-                        }}
+                        status={data.createdAt}
+                        subtitleText={`${data.price} RSD`}
+                        titleText={data.location}
+                        action={<><Button onClick={handleOpenClose}>Show More</Button> <Button onClick={() => handleDelete(data.id)}>Delete</Button></>}
                     />
                 }
 
@@ -37,7 +32,7 @@ const InvoiceCard = () => {
                 {opened && (
 
                     <List mode="SingleSelect">
-                        {sampleInvoice.items.map((item) =>
+                        {data.items.map((item :InvoiceItem) =>
                             <StandardListItem
                                 key={item.name}
                                 description={`${item.count} x ${item.price} RSD = ${item.price * item.count} RSD`}>

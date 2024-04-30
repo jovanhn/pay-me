@@ -26,7 +26,6 @@ const AuthProvider = ({children}: Props): ReactElement => {
         signInWithPopup(auth, googleProvider)
             .then(result => {
                 const loggedInUser = result.user;
-                console.log(loggedInUser);
                 setUser(loggedInUser);
             })
             .catch(error => {
