@@ -12,6 +12,12 @@ const RoutesList = [
         isMainNavigation: true,
         path: '/profile',
         translation: 'app.nav.user-profile',
+    },
+    {
+        id: RouteIDs.SCAN_QR,
+        isMainNavigation: true,
+        path: '/scan-qr',
+        translation: 'app.nav.scan-qr',
     }
 ]
 
