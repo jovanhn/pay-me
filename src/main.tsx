@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import {ThemeProvider} from "@ui5/webcomponents-react";
-import {GoogleOAuthProvider} from "@react-oauth/google";
+import AuthProvider from "./auth/AuthProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <GoogleOAuthProvider clientId="384493949269-92lovmp75fdp9cs4idnmpan7884cal14.apps.googleusercontent.com">
-        <React.StrictMode>
+    <React.StrictMode>
+        <AuthProvider>
             <ThemeProvider>
                 <App/>
             </ThemeProvider>
-        </React.StrictMode>
-    </GoogleOAuthProvider>,
+        </AuthProvider>
+    </React.StrictMode>
 )

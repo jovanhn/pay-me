@@ -15,9 +15,9 @@ import {useEffect, useReducer, useState} from "react";
 import {StandardFieldProps} from "../../interfaces/properties.tsx";
 import {UserProfile} from "../../interfaces/entities.tsx";
 import {UserInfoReducerParams} from "../../interfaces/parameters.tsx";
-import {getFirestore, doc, getDoc, setDoc} from "firebase/firestore";
-import FirestoreApp from "../../firestore.tsx";
-
+import {doc, getDoc, setDoc} from "firebase/firestore";
+import {useCurrentUser} from "../../auth/AuthProvider.tsx";
+import {db} from "../../firebase.tsx";
 
 const StandardField = ({editMode, value, inputType = InputType.Text, onInput, ...rest}: StandardFieldProps) => {
     if (editMode) {
@@ -53,9 +53,6 @@ const sampleUser: UserProfile = {
         account_number: '160-12387812325456-12',
     }
 }
-
-const testUser = 'test_user'
-
 const supportedBanks: string[] = ['None', 'Mobi', 'Intesa', 'NLB']
 
 const UserProfileDetailsForm = () => {
@@ -63,6 +60,7 @@ const UserProfileDetailsForm = () => {
     const [editMode, toggleEditMode] = useReducer((prev) => !prev, false, undefined);
     const [form, setForm] = useState<UserProfile>(sampleUser);
     const {generalInfo, bankInfo} = form;
+    const {user} = useCurrentUser()
 
     const handleInput = (e: Ui5CustomEvent<InputDomRef> | Ui5CustomEvent<SelectDomRef, SelectChangeEventDetail>) => {
         setForm(updateState(form, {
@@ -72,10 +70,9 @@ const UserProfileDetailsForm = () => {
         }))
     }
 
-    const fetchPost = async () => {
+    const fetchUserInfo = async () => {
 
-        const db = getFirestore(FirestoreApp);
-        const docRef = doc(db, "users", testUser);
+        const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             console.log("Document data:", docSnap.data() as UserProfile);
@@ -88,14 +85,12 @@ const UserProfileDetailsForm = () => {
     }
 
     useEffect(() => {
-        fetchPost();
+        fetchUserInfo();
     }, [])
 
     const updateUserInfo = async () => {
-
-        const db = getFirestore(FirestoreApp);
         try {
-            await setDoc(doc(db, "users", testUser), form);
+            await setDoc(doc(db, "users", user.uid), form);
             console.log("Document written with ID: ");
         } catch (e) {
             console.error("Error adding document: ", e);

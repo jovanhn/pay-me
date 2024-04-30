@@ -16,14 +16,17 @@ export interface BankInfo {
     account_number: string
 }
 
+export interface Invoice {
+    id: string,
+    location: string
+    createdAt: string,
+    price: number
+    rawUrl: string,
+    items: InvoiceItem[]
+}
 
-
-// {
-//     name: 'John Doe',
-//     country: 'Serbia',
-//     city: 'Belgrade',
-//     street: 'Bul. Kralja Aleksandra 18',
-//     mail: 'john.doe@gmail.com',
-//     bank: 'Mobi',
-//     account_number: '160-12387812325456-12',
-// }
+export interface InvoiceItem {
+    name: string,
+    count: number,
+    price: number,
+}
