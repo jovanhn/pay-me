@@ -18,15 +18,20 @@ export interface BankInfo {
 
 export interface Invoice {
     id: string,
-    location: string
-    createdAt: string,
-    price: number
-    rawUrl: string,
-    items: InvoiceItem[]
+    totalAmount: number,
+    dateTime: string,
+    shopFullName: string,
+    address: string,
+    invoiceNumber: string,
+    currency: string,
+    type: string,
+    items: Item[]
 }
 
-export interface InvoiceItem {
+export interface Item {
+    id: string,
     name: string,
-    count: number,
-    price: number,
+    amount: number,
+    priceWithVat: number,
+    totalPrice: number
 }

@@ -16,7 +16,6 @@ const InvoicesList = () => {
         const colRef = collection(db, "data/invoices", user.uid);
         getDocs(colRef).then((docsSnap) => {
             const invoicesList: Invoice[] = []
-            console.log("loaded")
             docsSnap.docs.map((doc) => {
                 doc.data()
                 invoicesList.push(doc.data() as Invoice)
@@ -41,15 +40,17 @@ const InvoicesList = () => {
                     key={invoice.id}
                     data={invoice}/>
             ))}
-            <Button onClick={() => handleNewInvoice(
-                {
-                    id: crypto.randomUUID(),
-                    location: "MAXI",
-                    rawUrl: "teset",
-                    price: 1,
-                    items: [{name: "test", count: 1, price: 1}],
-                } as Invoice
-            )}>Add invoice</Button>
+            <Button onClick={()=>handleNewInvoice({
+                id: 'test',
+                totalAmount: 100,
+                dateTime: '21.1.2024.',
+                shopFullName: 'MAXI',
+                items: [],
+                type: 'QR',
+                address: "s",
+                invoiceNumber: '123',
+                currency:'RSD'
+            })}>Add invoice</Button>
         </>
     )
 }

@@ -1,8 +1,9 @@
 import {useState} from "react";
 import {Button, Card, CardHeader, Icon, List, StandardListItem} from "@ui5/webcomponents-react";
-import {Invoice, InvoiceItem} from "../../interfaces/entities.tsx";
-import {useDeleteInvoice} from "../../services/Invoices.tsx";
+import {Invoice, Item} from "../../interfaces/entities.tsx";
 import {useCurrentUser} from "../../auth/AuthProvider.tsx";
+import {deleteDoc, doc} from "firebase/firestore";
+import {db} from "../../firebase.tsx";
 
 
 const InvoiceCard = ({data}: {data: Invoice}) => {
@@ -13,7 +14,7 @@ const InvoiceCard = ({data}: {data: Invoice}) => {
     }
 
     const handleDelete = (id: string) => {
-        useDeleteInvoice(user,id)
+         void deleteDoc(doc(db, `data/invoices/${user.uid}`, id))
     }
 
     return (
@@ -21,21 +22,21 @@ const InvoiceCard = ({data}: {data: Invoice}) => {
                 header={
                     <CardHeader
                         avatar={<Icon name="basket"/>}
-                        status={data.createdAt}
-                        subtitleText={`${data.price} RSD`}
-                        titleText={data.location}
+                        // status={data.dateTime}
+                        subtitleText={`${data.totalAmount} RSD`}
+                        titleText={data.shopFullName}
                         action={<><Button onClick={handleOpenClose}>Show More</Button> <Button onClick={() => handleDelete(data.id)}>Delete</Button></>}
                     />
                 }
 
             >
-                {opened && (
+                {opened && data.items &&(
 
                     <List mode="SingleSelect">
-                        {data.items.map((item :InvoiceItem) =>
+                        {data.items.map((item :Item) =>
                             <StandardListItem
                                 key={item.name}
-                                description={`${item.count} x ${item.price} RSD = ${item.price * item.count} RSD`}>
+                                description={`${item.amount} x ${item.priceWithVat} RSD = ${item.totalPrice} RSD`}>
                                 {item.name}
                             </StandardListItem>)}
                     </List>)
