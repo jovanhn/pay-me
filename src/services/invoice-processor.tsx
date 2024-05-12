@@ -37,7 +37,7 @@ export const useInvoiceProcessor = () => {
             console.log(e.name)
             console.log(e.stack)
             console.log(e.response)
-            setError(`Error: ${err}`);
+            setError(`Error: ${e.message}`);
         } finally {
             setIsLoading(false);
         }
