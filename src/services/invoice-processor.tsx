@@ -19,8 +19,13 @@ export const useInvoiceProcessor = () => {
         setIsLoading(true);
         try {
             // this spins server if it is down
-            await axios.get('https://invoice-processor.onrender.com/')
-            const response = await axios.post('https://invoice-processor.onrender.com/dummy/process', {url: qr_text});
+            // await axios.get('https://invoice-processor.onrender.com/')
+
+            const response = await axios.post('https://invoice-processor.onrender.com/dummy/process', {url: qr_text}, {
+                headers: {
+                    'Host': 'invoice-processor.onrender.com',
+                }
+            });
             setData(response.data);
             const invoice = response.data;
             invoice.id = crypto.randomUUID()
