@@ -18,8 +18,8 @@ export const useInvoiceProcessor = () => {
         console.log("Calling once")
         setIsLoading(true);
         try {
-            const response = await axios.post('https://invoice-processor.onrender.com/process', {url: qr_text});
             await axios.get('https://invoice-processor.onrender.com/')
+            const response = await axios.post('https://invoice-processor.onrender.com/process', {url: qr_text});
             setData(response.data);
             const invoice = response.data;
             invoice.id = crypto.randomUUID()
