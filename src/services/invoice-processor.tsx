@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import {Invoice} from "../interfaces/entities.tsx";
 import {useState} from "react";
 import {doc, setDoc} from "firebase/firestore";
@@ -32,7 +32,11 @@ export const useInvoiceProcessor = () => {
                 console.log(errorInserting)
             })
         } catch (err) {
-            console.log(err)
+            const e = err as AxiosError;
+            console.log(e.message)
+            console.log(e.name)
+            console.log(e.stack)
+            console.log(e.response)
             setError(`Error: ${err}`);
         } finally {
             setIsLoading(false);
