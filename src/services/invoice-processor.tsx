@@ -18,6 +18,7 @@ export const useInvoiceProcessor = () => {
         console.log("Calling once")
         setIsLoading(true);
         try {
+            // this spins server if it is down
             await axios.get('https://invoice-processor.onrender.com/')
             const response = await axios.post('https://invoice-processor.onrender.com/process', {url: qr_text});
             setData(response.data);
@@ -31,7 +32,8 @@ export const useInvoiceProcessor = () => {
                 console.log(errorInserting)
             })
         } catch (err) {
-            setError("Error");
+            console.log(err)
+            setError(`Error: ${err}`);
         } finally {
             setIsLoading(false);
         }
