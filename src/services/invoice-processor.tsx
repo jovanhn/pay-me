@@ -1,7 +1,7 @@
 import axios, {AxiosError} from "axios";
 import {Invoice} from "../interfaces/entities.tsx";
 import {useState} from "react";
-import {doc, setDoc} from "firebase/firestore";
+import {doc, setDoc, Timestamp} from "firebase/firestore";
 import {db} from "../firebase.tsx";
 import {useCurrentUser} from "../auth/AuthProvider.tsx";
 import {useNavigate} from "react-router-dom";
@@ -15,7 +15,6 @@ export const useInvoiceProcessor = () => {
     const navigate = useNavigate();
 
     const processInvoice = async (qr_text: string) => {
-        console.log("Calling once")
         setIsLoading(true);
         try {
             // this spins server if it is down
@@ -26,12 +25,26 @@ export const useInvoiceProcessor = () => {
                     'Host': 'invoice-processor.onrender.com',
                 }
             });
+            const dateString = response.data.dateTime;
+
+            // Split the date string into its components
+            const [day, month, year, time] = dateString.split(/[.\s]+/);
+            const dateObject = new Date(`${year}-${month}-${day}T${time}`);
+
+            // Convert the JavaScript Date object to a Firestore Timestamp
+            const timestamp = Timestamp.fromDate(dateObject);
+            console.log(timestamp);
+            response.data.dateTime = timestamp
+
             setData(response.data);
-            const invoice = response.data;
+            const invoice = response.data as Invoice;
             invoice.id = crypto.randomUUID()
+            console.log(invoice.totalAmount)
+            invoice.totalAmount = Number(invoice.totalAmount.toString().replace(',','.'))
             await setDoc(doc(db, `data/invoices/${user.uid}`, invoice.id), invoice).then((response) => {
                 console.log("Invoice created");
                 console.log(response)
+
                 navigate('/')
             }).catch((errorInserting) => {
                 console.log(errorInserting)

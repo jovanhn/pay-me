@@ -1,3 +1,5 @@
+import {Timestamp} from "firebase/firestore";
+
 export interface UserProfile {
     generalInfo: GeneralInfo
     bankInfo: BankInfo
@@ -19,7 +21,7 @@ export interface BankInfo {
 export interface Invoice {
     id: string,
     totalAmount: number,
-    dateTime: string,
+    dateTime: Timestamp,
     shopFullName: string,
     address: string,
     invoiceNumber: string,
