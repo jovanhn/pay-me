@@ -3,14 +3,11 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import {ThemeProvider} from "@ui5/webcomponents-react";
-import AuthProvider from "./auth/AuthProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <AuthProvider>
             <ThemeProvider>
                 <App/>
             </ThemeProvider>
-        </AuthProvider>
     </React.StrictMode>
 )

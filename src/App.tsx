@@ -4,16 +4,19 @@ import Header from './components/Header/Header.tsx'
 import '@ui5/webcomponents-icons/dist/AllIcons'
 import {HashRouter} from "react-router-dom";
 import Routes from "./routes/Routes.tsx";
+import AuthProvider from './auth/AuthProvider.tsx';
 
 function App() {
     setTheme('sap_horizon')
 
     return (
         <>
-            <HashRouter>
-                <Header/>
-                <Routes/>
-            </HashRouter>
+            <AuthProvider>
+                <HashRouter>
+                    <Header/>
+                    <Routes/>
+                </HashRouter>
+            </AuthProvider>
         </>
     )
 }

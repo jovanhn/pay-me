@@ -18,6 +18,12 @@ const RoutesList = [
         isMainNavigation: true,
         path: '/scan-qr',
         translation: 'app.nav.scan-qr',
+    },
+    {
+        id: RouteIDs.CREATE_NEW_INVOICE_MANUAL,
+        isMainNavigation: true,
+        path: '/new-invoice',
+        translation: 'app.nav.create-new-invoice-manual',
     }
 ]
 
