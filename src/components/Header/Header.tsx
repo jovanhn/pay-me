@@ -35,8 +35,8 @@ const Header = () => {
                         <StandardListItem
                             icon="log"
                             onClick={()=> {
-                                void signOut(auth)
-                                navigate('/logout');
+
+
                             }}
                         >
                             Logout
