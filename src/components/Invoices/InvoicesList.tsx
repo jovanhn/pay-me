@@ -8,6 +8,7 @@ import {Button} from "@ui5/webcomponents-react";
 import {useCreateInvoice} from "../../services/Invoices.tsx";
 import {Timestamp} from "firebase/firestore";
 import {useInvoiceProcessor} from "../../services/invoice-processor.tsx";
+import {useNavigate} from "react-router-dom";
 
 
 
@@ -23,6 +24,7 @@ const InvoicesList = ({date}: InvoicesListProps) => {
     const {user} = useCurrentUser()
     const [total, setTotal] = useState<number>(0);
     const {data, processInvoice} = useInvoiceProcessor();
+    const navigate = useNavigate();
 
     const fetchInvoices = () => {
         const timestampFrom = Timestamp.fromDate(date)
@@ -80,7 +82,13 @@ const InvoicesList = ({date}: InvoicesListProps) => {
                     })
                     console.log(url);
 
-            }}>Manual create</Button>
+            }}>Dummy create</Button>
+            <Button onClick={()=> {
+
+                navigate('/new-invoice')
+                console.log(url);
+
+            }}>Manual input</Button>
         </>
     )
 }

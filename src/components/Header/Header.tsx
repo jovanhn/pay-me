@@ -7,9 +7,7 @@ import {
     ShellBarItem,
     StandardListItem,
 } from "@ui5/webcomponents-react";
-import { signOut } from "firebase/auth";
 import {useNavigate} from "react-router-dom";
-import {auth} from "../../firebase.tsx";
 
 const Header = () => {
     const showPopover = Modals.useShowPopover();
