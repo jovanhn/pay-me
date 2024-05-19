@@ -66,8 +66,9 @@ const InvoicesList = ({date}: InvoicesListProps) => {
             }}>Manual input</Button>
             <Button onClick={() => {
 
-                processInvoice(url).then(() => {
+                processInvoice(url, true).then(() => {
                     console.log(data)
+                    fetchInvoices()
                 })
                 console.log(url);
 

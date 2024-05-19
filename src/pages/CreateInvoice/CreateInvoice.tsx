@@ -97,7 +97,7 @@ const CreateInvoicePage = () => {
                         </Select>
                     </FormItem>
 
-                    <FormItem label="Custom date:">
+                    <FormItem label="Custom date">
                         <Switch name="marked" onChange={(e=>{
                             setCustomDateDisabled(!e.target.checked)
                         })}/>
