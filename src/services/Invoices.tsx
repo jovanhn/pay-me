@@ -5,7 +5,7 @@ import {User} from "firebase/auth"
 import {Invoice} from "../interfaces/entities.tsx";
 
 
-export const useCreateInvoice = async (user: User,  invoice: Invoice) => {
+export const createInvoice = async (user: User, invoice: Invoice) => {
 
     await setDoc(doc(db, `data/invoices/${user.uid}`, invoice.id), invoice).then((response)=> {
         console.log("Invoice created");

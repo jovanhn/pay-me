@@ -8,45 +8,43 @@ import {
     StandardListItem,
 } from "@ui5/webcomponents-react";
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
 
 const Header = () => {
     const showPopover = Modals.useShowPopover();
     const navigate = useNavigate()
-    const [isOpen, setOpen] = useState<boolean>()
 
     return (
         <ShellBar
             logo={<Icon name="monitor-payments"/>}
             onLogoClick={() => navigate('/')}
             onProfileClick={() => {
-                showPopover({
-                    open: isOpen,
-                    opener: 'shellbar-avatar',
-                    placementType: 'Bottom',
-                    horizontalAlign: 'Right',
-                    children: (<List separators="None" data-testid="userMenu">
-                        <StandardListItem
-                            icon="user-settings"
-                            onClick={() => {
-                                setOpen(false)
-                                navigate('/profile')
-                            }}
-                            data-testid="userMenuSettings"
-                        >
-                            Profile Settings
-                        </StandardListItem>
-                        <StandardListItem
-                            icon="log"
-                            onClick={() => {
+                const {close} =
+                    showPopover({
+                        opener: 'shellbar-avatar',
+                        placementType: 'Bottom',
+                        horizontalAlign: 'Right',
+                        children: (<List separators="None" data-testid="userMenu">
+                            <StandardListItem
+                                icon="user-settings"
+                                onClick={() => {
+                                    close()
+                                    navigate('/profile')
+                                }}
+                                data-testid="userMenuSettings"
+                            >
+                                Profile Settings
+                            </StandardListItem>
+                            <StandardListItem
+                                icon="log"
+                                onClick={() => {
+                                    close()
 
-
-                            }}
-                        >
-                            Logout
-                        </StandardListItem>
-                    </List>)
-                });
+                                }}
+                            >
+                                Logout
+                            </StandardListItem>
+                        </List>)
+                    });
             }}
             onSearchButtonClick={() => {
             }}

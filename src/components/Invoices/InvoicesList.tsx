@@ -5,7 +5,6 @@ import {Invoice} from "../../interfaces/entities.tsx";
 import {useCurrentUser} from "../../auth/AuthProvider.tsx";
 import {useEffect, useState} from "react";
 import {Button} from "@ui5/webcomponents-react";
-import {useCreateInvoice} from "../../services/Invoices.tsx";
 import {Timestamp} from "firebase/firestore";
 import {useInvoiceProcessor} from "../../services/invoice-processor.tsx";
 import {useNavigate} from "react-router-dom";
@@ -48,47 +47,31 @@ const InvoicesList = ({date}: InvoicesListProps) => {
             console.log(err)
         });
     }
-    const handleNewInvoice = (invoice: Invoice) => {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useCreateInvoice(user, invoice).then(r => {
-            console.log(r)
-            fetchInvoices()
-        }).catch(err => console.log(err))
-
-    }
     useEffect(() => fetchInvoices(), [date])
     return (<>
             <div>Total: {total} RSD</div>
+
             {invoices.map((invoice) => (
                 <InvoiceCard
                     key={invoice.id}
                     data={invoice}/>
             ))}
-            <Button onClick={()=>handleNewInvoice({
-                id: crypto.randomUUID(),
-                totalAmount: 100,
-                dateTime: Timestamp.now(),
-                shopFullName: 'MAXI',
-                items: [],
-                type: 'QR',
-                address: "s",
-                invoiceNumber: '123',
-                currency:'RSD'
-            })}>Add invoice</Button>
-            <Button onClick={()=> {
 
-                    processInvoice(url).then(() => {
-                        console.log(data)
-                    })
-                    console.log(url);
-
-            }}>Dummy create</Button>
             <Button onClick={()=> {
 
                 navigate('/new-invoice')
                 console.log(url);
 
             }}>Manual input</Button>
+            <Button onClick={()=> {
+
+                processInvoice(url).then(() => {
+                    console.log(data)
+                })
+                console.log(url);
+
+            }}>Dummy create</Button>
+
         </>
     )
 }

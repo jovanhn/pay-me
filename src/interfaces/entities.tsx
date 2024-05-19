@@ -28,6 +28,8 @@ export interface Invoice {
     currency: string,
     type: string,
     items: Item[]
+    marked?: boolean
+    comment?: string
 }
 
 export interface Item {

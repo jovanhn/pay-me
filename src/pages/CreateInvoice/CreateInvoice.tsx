@@ -1,7 +1,66 @@
-import {Bar, Button, Form, FormGroup, FormItem, Option, Input, Label, Select, Switch, TextArea} from "@ui5/webcomponents-react"
+import {
+    Bar,
+    Button,
+    Form,
+    FormGroup,
+    FormItem,
+    Option,
+    Input,
+    Label,
+    Select,
+    Switch,
+    TextArea, Ui5CustomEvent, InputDomRef, SelectDomRef, SwitchDomRef, DateTimePicker
+} from "@ui5/webcomponents-react"
+import {useState} from "react";
+import {Invoice} from "../../interfaces/entities.tsx";
+import {Timestamp} from "firebase/firestore";
+import {SelectChangeEventDetail} from "@ui5/webcomponents/dist/Select.js";
+import {createInvoice} from "../../services/Invoices.tsx";
+import {auth} from "../../firebase.tsx";
+import {useNavigate} from "react-router-dom";
 
 
 const CreateInvoicePage = () => {
+    const [invoice, setInvoice] = useState<Invoice>(
+        {
+            id: crypto.randomUUID(),
+            shopFullName: '',
+            address: '',
+            dateTime: Timestamp.fromDate(new Date()),
+            totalAmount: 0,
+            currency: 'RSD',
+            invoiceNumber: '',
+            type: 'manual',
+            items: []
+        })
+    const [customDateDisabled, setCustomDateDisabled] = useState(true)
+
+    const navigate = useNavigate();
+
+
+    const handleCurrencySelectChange = (e: Ui5CustomEvent<SelectDomRef, SelectChangeEventDetail>) => {
+        const updatedInvoice = {...invoice}
+        updatedInvoice.currency = e.target.value
+        setInvoice(updatedInvoice)
+    }
+
+    const handleFormInputChange = (e: Ui5CustomEvent<InputDomRef>) => {
+        const updatedInvoice = {...invoice, [e.target.name]: e.target.value}
+        setInvoice(updatedInvoice)
+    }
+
+    const handleFormInputChangeNumeric = (e: Ui5CustomEvent<InputDomRef>) => {
+        const updatedInvoice = {...invoice, [e.target.name]: parseFloat(e.target.value)}
+        setInvoice(updatedInvoice)
+    }
+
+    const handleMark = (e: Ui5CustomEvent<SwitchDomRef>) => {
+        const updatedInvoice = {...invoice, [e.target.name]: e.target.checked}
+        setInvoice(updatedInvoice)
+        console.log(invoice)
+    }
+
+
     return (
         <>
             <Form
@@ -20,16 +79,33 @@ const CreateInvoicePage = () => {
             >
                 <FormGroup titleText="Main information">
                     <FormItem label="Name">
-                        <Input type="Text"/>
-                    </FormItem>
-                    <FormItem label="Currency">
-                    <Select defaultValue="€">
-                        <Option>€</Option>
-                        <Option>RSD</Option>
-                    </Select>
+                        <Input
+                            name="shopFullName"
+                            type="Text"
+                            placeholder="Maxi or Airplane tickets for Barcelona..."
+                            onChange={(e) => handleFormInputChange(e)}/>
                     </FormItem>
                     <FormItem label={<Label>Price</Label>}>
-                        <Input type="Number"/>
+                        <Input
+                            name="totalAmount"
+                            type="Number"
+                            placeholder="1245.45"
+                            onInput={(e) => handleFormInputChangeNumeric(e)}/>
+                        <Select value={invoice.currency} onChange={(e) => handleCurrencySelectChange(e)}>
+                            <Option>RSD</Option>
+                            <Option>€</Option>
+                        </Select>
+                    </FormItem>
+
+                    <FormItem label="Custom date:">
+                        <Switch name="marked" onChange={(e=>{
+                            setCustomDateDisabled(!e.target.checked)
+                        })}/>
+                        <DateTimePicker disabled={customDateDisabled} value={invoice.dateTime.toDate().toString()}
+                               onChange={(e) => {
+                                   console.log(e.target.value)
+                                   setInvoice({...invoice, dateTime: Timestamp.fromDate(new Date(e.target.value))})
+                               }}/>
                     </FormItem>
 
                     <FormItem
@@ -39,13 +115,29 @@ const CreateInvoicePage = () => {
                             rows={5}
                         />
                     </FormItem>
-                    <FormItem label="Mark as important">
-                        <Switch/>
+                    <FormItem label="Mark">
+                        <Switch name="marked" onChange={(e) => handleMark(e)}/>
                     </FormItem>
                 </FormGroup>
             </Form>
             <Bar design="FloatingFooter"
-                 endContent={<><Button design="Emphasized" >Create</Button><Button design="Transparent">Cancel</Button></>}/>
+                 endContent={<>
+                     <Button disabled={(invoice.shopFullName === '' || invoice.totalAmount === 0)}
+                             design="Emphasized" onClick={() => {
+                         if (auth.currentUser) {
+                             createInvoice(auth.currentUser, invoice).then(() => {
+                                 navigate('/')
+                             })
+                         }
+                         console.log(invoice)
+                     }}>Create</Button>
+                     <Button
+                         onClick={() => {
+                             navigate('/')
+                         }}
+                         design="Transparent">
+                         Cancel
+                     </Button></>}/>
 
         </>
     )
