@@ -1,5 +1,5 @@
 import InvoiceCard from "./InvoiceCard.tsx";
-import {collection, getDocs,where, query} from "firebase/firestore";
+import {collection, getDocs, where, query} from "firebase/firestore";
 import {db} from "../../firebase.tsx";
 import {Invoice} from "../../interfaces/entities.tsx";
 import {useCurrentUser} from "../../auth/AuthProvider.tsx";
@@ -8,7 +8,6 @@ import {Button} from "@ui5/webcomponents-react";
 import {Timestamp} from "firebase/firestore";
 import {useInvoiceProcessor} from "../../services/invoice-processor.tsx";
 import {useNavigate} from "react-router-dom";
-
 
 
 interface InvoicesListProps {
@@ -28,7 +27,7 @@ const InvoicesList = ({date}: InvoicesListProps) => {
     const fetchInvoices = () => {
         const timestampFrom = Timestamp.fromDate(date)
         const dateTimeTo = new Date(date)
-        dateTimeTo.setMonth(date.getMonth()+1)
+        dateTimeTo.setMonth(date.getMonth() + 1)
         const timestampTo = Timestamp.fromDate(dateTimeTo)
         const colRef = collection(db, "data/invoices", user.uid);
         const q = query(colRef, where("dateTime", ">=", timestampFrom), where("dateTime", "<", timestampTo));
@@ -54,16 +53,18 @@ const InvoicesList = ({date}: InvoicesListProps) => {
             {invoices.map((invoice) => (
                 <InvoiceCard
                     key={invoice.id}
-                    data={invoice}/>
+                    invoice={invoice}
+                    refetch={fetchInvoices}/>
+
             ))}
 
-            <Button onClick={()=> {
+            <Button onClick={() => {
 
                 navigate('/new-invoice')
                 console.log(url);
 
             }}>Manual input</Button>
-            <Button onClick={()=> {
+            <Button onClick={() => {
 
                 processInvoice(url).then(() => {
                     console.log(data)

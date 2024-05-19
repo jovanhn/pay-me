@@ -5,8 +5,12 @@ import {useCurrentUser} from "../../auth/AuthProvider.tsx";
 import {deleteDoc, doc} from "firebase/firestore";
 import {db} from "../../firebase.tsx";
 
+interface InvoiceCardProps {
+    invoice: Invoice,
+    refetch: () => void,
+}
 
-const InvoiceCard = ({data}: {data: Invoice}) => {
+const InvoiceCard = ({invoice, refetch} : InvoiceCardProps) => {
     const [opened, setOpened] = useState(false)
     const {user} = useCurrentUser()
     const handleOpenClose = () => {
@@ -14,7 +18,9 @@ const InvoiceCard = ({data}: {data: Invoice}) => {
     }
 
     const handleDelete = (id: string) => {
-         void deleteDoc(doc(db, `data/invoices/${user.uid}`, id))
+         void deleteDoc(doc(db, `data/invoices/${user.uid}`, id)).then(()=> {
+             refetch()
+         })
     }
 
     return (
@@ -23,17 +29,17 @@ const InvoiceCard = ({data}: {data: Invoice}) => {
                     <CardHeader
                         avatar={<Icon name="basket"/>}
                         // status={data.dateTime}
-                        subtitleText={`${data.totalAmount} RSD`}
-                        titleText={data.shopFullName}
-                        action={<><Button onClick={handleOpenClose}>Show More</Button> <Button onClick={() => handleDelete(data.id)}>Delete</Button></>}
+                        subtitleText={`${invoice.totalAmount} RSD`}
+                        titleText={invoice.shopFullName}
+                        action={<><Button onClick={handleOpenClose}>Show More</Button> <Button onClick={() => handleDelete(invoice.id)}>Delete</Button></>}
                     />
                 }
 
             >
-                {opened && data.items &&(
+                {opened && invoice.items &&(
 
                     <List mode="SingleSelect">
-                        {data.items.map((item :Item) =>
+                        {invoice.items.map((item :Item) =>
                             <StandardListItem
                                 key={item.name}
                                 description={`${item.amount} x ${item.priceWithVat} RSD = ${item.totalPrice} RSD`}>
