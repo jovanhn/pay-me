@@ -25,7 +25,23 @@ export const useInvoiceProcessor = () => {
 
             const response = await axios.post(isSimpleService? simpleServiceUrl: serivceUrl, {url: qr_text});
             const dateString = response.data.dateTime.split(' ')[0];
-            const timeString = response.data.dateTime.split(' ')[1];
+            let timeString = response.data.dateTime.split(' ')[1];
+
+            const hourRegex: RegExp = /^(\d{1,2}):/;
+
+            // Find the hour part
+            const hourMatch: RegExpMatchArray | null = timeString.match(hourRegex);
+
+            // If hour part is found
+            console.log(timeString);
+            if (hourMatch) {
+                let hour: string = hourMatch[1];
+                // Convert to two digits
+                hour = hour.padStart(2, '0');
+                // Replace hour part in the string
+                timeString = timeString.replace(hourRegex, hour + ':');
+
+            }
             // Split the date string into its components
 
             const [day, month, year] = dateString.split('.')
