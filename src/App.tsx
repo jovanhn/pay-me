@@ -10,14 +10,12 @@ function App() {
     setTheme('sap_horizon')
 
     return (
-        <>
-            <AuthProvider>
-                <HashRouter>
-                    <Header/>
-                    <Routes/>
-                </HashRouter>
-            </AuthProvider>
-        </>
+        <AuthProvider>
+            <HashRouter>
+                <Header/>
+                <Routes/>
+            </HashRouter>
+        </AuthProvider>
     )
 }
 

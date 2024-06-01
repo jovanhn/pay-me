@@ -54,11 +54,6 @@ const Header = () => {
             }
         >
             <ShellBarItem
-                icon="qr-code"
-                text="QR Scan"
-                onClick={() => navigate('/scan-qr')}
-            />
-            <ShellBarItem
                 icon="home"
                 text="Home"
                 onClick={() => navigate('/')}

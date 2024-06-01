@@ -6,8 +6,10 @@ import {
     User
 } from "firebase/auth";
 import React, {createContext, ReactElement, useState} from "react";
-import {Button, Loader} from "@ui5/webcomponents-react";
+import { Button, FlexBox, IllustratedMessage, Loader, Title} from "@ui5/webcomponents-react";
 import {auth} from "../firebase.tsx";
+import "@ui5/webcomponents-fiori/dist/illustrations/tnt/Calculator"
+import styles from "./AuthProvider.module.scss"
 
 
 interface Props {
@@ -23,10 +25,10 @@ const AuthContext = createContext({} as UserContext)
 
 const AuthProvider = ({children}: Props): ReactElement => {
     const googleProvider = new GoogleAuthProvider()
-    const [user, setUser] = useState<User|null>(auth.currentUser);
+    const [user, setUser] = useState<User | null>(auth.currentUser);
     const [loading, setLoading] = useState<boolean>(true);
     // Avoid login in case of page refresh
-    auth.onAuthStateChanged(function(currentUser) {
+    auth.onAuthStateChanged(function (currentUser) {
         if (currentUser) {
             // User is signed in.
             setUser(currentUser);
@@ -53,13 +55,17 @@ const AuthProvider = ({children}: Props): ReactElement => {
     }
 
     if (loading) {
-        return <Loader />
+        return <Loader/>
     }
 
     if (!user) {
-        return <>
-            <Button onClick={handleGoogleSignIn}> Sign in with google</Button>
-        </>
+        return (
+            <FlexBox direction="Column" alignItems="Center" className={styles['container']}>
+                <IllustratedMessage name="TntCalculator"/>
+                <Title>SpareSquare</Title>
+                <Button onClick={handleGoogleSignIn} icon="visits" iconEnd> Sign in with Google</Button>
+            </FlexBox>
+        )
     }
 
     return (
