@@ -16,7 +16,7 @@
     "@ui5/webcomponents-icons": "^1.24.3",
     "@ui5/webcomponents-react": "^1.28.1",
     "@ui5/webcomponents-react-charts": "^1.28.1",
-    "@yudiel/react-qr-scanner": "^2.0.0-beta.3",
+    "@yudiel/react-qr-scanner": "^2.0.1",
     "axios": "^1.6.8",
     "firebase": "^10.11.1",
     "react": "^18.2.0",
