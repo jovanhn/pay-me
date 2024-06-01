@@ -1,4 +1,4 @@
-import {useState} from "react";
+import  {useState} from "react";
 import {Button, Card, CardHeader, Icon, List, Modals, StandardListItem} from "@ui5/webcomponents-react";
 import {Invoice, Item} from "../../interfaces/entities.tsx";
 import {useCurrentUser} from "../../auth/AuthProvider.tsx";
@@ -40,10 +40,10 @@ const InvoiceCard = ({invoice, refetch}: InvoiceCardProps) => {
                             <Button onClick={handleOpenClose} icon={opened ? "collapse" : "expand"}
                                     design="Transparent"/>
                             <Button
-                                id="openMoreBtn"
+                                id={`openMoreBtn${invoice.id}`}
                                 onClick={() => {
                                     const {close} = showPopover({
-                                        opener: 'openMoreBtn',
+                                        opener: `openMoreBtn${invoice.id}`,
                                         children: (<List separators="None" data-testid="more-menu">
                                             <StandardListItem
                                                 iconEnd
