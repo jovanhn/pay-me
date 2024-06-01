@@ -14,7 +14,7 @@ const InvoiceCard = ({invoice, refetch}: InvoiceCardProps) => {
     const [opened, setOpened] = useState(false)
     const {user} = useCurrentUser()
     const handleOpenClose = () => {
-        if (invoice.items?.length >0) {
+        if (invoice.items?.length > 0) {
             setOpened(!opened)
         }
     }
@@ -25,13 +25,14 @@ const InvoiceCard = ({invoice, refetch}: InvoiceCardProps) => {
             refetch()
         })
     }
-
+    console.log(invoice.items)
     return (
         <Card
+            style={{padding: '0.5rem 0'}}
             header={
                 <CardHeader
                     avatar={<Icon name="basket"/>}
-                    // status={data.dateTime}
+                    status={invoice.dateTime.toDate().toLocaleDateString('en-us', {month: "long", day: "numeric", hour:"numeric", minute:"numeric"})}
                     subtitleText={`${invoice.totalAmount} RSD`}
                     titleText={invoice.shopFullName}
                     action={
