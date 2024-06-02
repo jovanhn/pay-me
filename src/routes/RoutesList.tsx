@@ -24,6 +24,12 @@ const RoutesList = [
         isMainNavigation: true,
         path: '/new-invoice',
         translation: 'app.nav.create-new-invoice-manual',
+    },
+    {
+        id: RouteIDs.INVOICE_DETAILS,
+        isMainNavigation: false,
+        path: '/invoices/:invoiceId',
+        translation: 'app.nav.create-new-invoice-manual',
     }
 ]
 

@@ -4,6 +4,7 @@ import {Invoice, Item} from "../../interfaces/entities.tsx";
 import {useCurrentUser} from "../../auth/AuthProvider.tsx";
 import {deleteDoc, doc} from "firebase/firestore";
 import {db} from "../../firebase.tsx";
+import {useNavigate} from "react-router-dom";
 
 interface InvoiceCardProps {
     invoice: Invoice,
@@ -13,6 +14,7 @@ interface InvoiceCardProps {
 const InvoiceCard = ({invoice, refetch}: InvoiceCardProps) => {
     const [opened, setOpened] = useState(false)
     const {user} = useCurrentUser()
+    const navigate = useNavigate()
     const handleOpenClose = () => {
         if (invoice.items?.length > 0) {
             setOpened(!opened)
@@ -49,6 +51,7 @@ const InvoiceCard = ({invoice, refetch}: InvoiceCardProps) => {
                                                 iconEnd
                                                 icon="detail-more"
                                                 onClick={() => {
+                                                    navigate(`/invoices/${invoice.id}`, {})
                                                 }}
                                                 data-testid="userMenuSettings"
                                             >

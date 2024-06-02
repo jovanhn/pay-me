@@ -1,5 +1,5 @@
 import InvoiceCard from "./InvoiceCard.tsx";
-import {collection, getDocs, where, query} from "firebase/firestore";
+import {collection, getDocs, where, query, orderBy} from "firebase/firestore";
 import {db} from "../../firebase.tsx";
 import {Invoice} from "../../interfaces/entities.tsx";
 import {useCurrentUser} from "../../auth/AuthProvider.tsx";
@@ -23,7 +23,10 @@ const InvoicesList = ({date, setMonthExpenses}: InvoicesListProps) => {
         dateTimeTo.setMonth(date.getMonth() + 1)
         const timestampTo = Timestamp.fromDate(dateTimeTo)
         const colRef = collection(db, "data/invoices", user.uid);
-        const q = query(colRef, where("dateTime", ">=", timestampFrom), where("dateTime", "<", timestampTo));
+        const q = query(colRef,
+            where("dateTime", ">=", timestampFrom),
+            where("dateTime", "<", timestampTo),
+            orderBy("dateTime", "desc"));
 
         getDocs(q).then((docsSnap) => {
             const invoicesList: Invoice[] = []

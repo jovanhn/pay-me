@@ -15,14 +15,18 @@ import {useState} from "react";
 import {Invoice} from "../../interfaces/entities.tsx";
 import {Timestamp} from "firebase/firestore";
 import {SelectChangeEventDetail} from "@ui5/webcomponents/dist/Select.js";
-import {createInvoice} from "../../services/Invoices.tsx";
+import {saveInvoice} from "../../services/Invoices.tsx";
 import {auth} from "../../firebase.tsx";
 import {useNavigate} from "react-router-dom";
 
+export interface CreateInvoiceProps {
+    oldInvoice?: Invoice
+}
 
-const CreateInvoicePage = () => {
+const CreateInvoicePage = ({oldInvoice}: CreateInvoiceProps) => {
+    console.log(oldInvoice)
     const [invoice, setInvoice] = useState<Invoice>(
-        {
+        oldInvoice ?? {
             id: crypto.randomUUID(),
             shopFullName: '',
             address: '',
@@ -75,13 +79,14 @@ const CreateInvoicePage = () => {
                 style={{
                     alignItems: 'center'
                 }}
-                titleText="Create new invoice"
+                titleText="Invoice details"
             >
-                <FormGroup titleText="Main information">
-                    <FormItem label="Name">
+                <FormGroup>
+                    <FormItem label="Expense Name">
                         <Input
                             name="shopFullName"
                             type="Text"
+                            value={invoice.shopFullName}
                             placeholder="Maxi or Airplane tickets for Barcelona..."
                             onChange={(e) => handleFormInputChange(e)}/>
                     </FormItem>
@@ -90,22 +95,28 @@ const CreateInvoicePage = () => {
                             name="totalAmount"
                             type="Number"
                             placeholder="1245.45"
+                            value={invoice.totalAmount.toString()}
                             onInput={(e) => handleFormInputChangeNumeric(e)}/>
-                        <Select value={invoice.currency} onChange={(e) => handleCurrencySelectChange(e)}>
+                        <Select
+                            style={{width:'3.2rem'}}
+                            value={invoice.currency}
+                            onChange={(e) => handleCurrencySelectChange(e)}>
                             <Option>RSD</Option>
                             <Option>€</Option>
                         </Select>
                     </FormItem>
 
                     <FormItem label="Custom date">
-                        <Switch name="marked" onChange={(e=>{
+                        <Switch name="marked" onChange={(e => {
                             setCustomDateDisabled(!e.target.checked)
                         })}/>
                         <DateTimePicker disabled={customDateDisabled} value={invoice.dateTime.toDate().toString()}
-                               onChange={(e) => {
-                                   console.log(e.target.value)
-                                   setInvoice({...invoice, dateTime: Timestamp.fromDate(new Date(e.target.value))})
-                               }}/>
+                                        onChange={(e) => {
+                                            setInvoice({
+                                                ...invoice,
+                                                dateTime: Timestamp.fromDate(new Date(e.target.value))
+                                            })
+                                        }}/>
                     </FormItem>
 
                     <FormItem
@@ -125,12 +136,12 @@ const CreateInvoicePage = () => {
                      <Button disabled={(invoice.shopFullName === '' || invoice.totalAmount === 0)}
                              design="Emphasized" onClick={() => {
                          if (auth.currentUser) {
-                             createInvoice(auth.currentUser, invoice).then(() => {
+                             saveInvoice(auth.currentUser, invoice).then(() => {
                                  navigate('/')
                              })
                          }
                          console.log(invoice)
-                     }}>Create</Button>
+                     }}>Save</Button>
                      <Button
                          onClick={() => {
                              navigate('/')
