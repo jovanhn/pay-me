@@ -55,7 +55,7 @@ export const useInvoiceProcessor = () => {
             const invoice = response.data as Invoice;
             invoice.id = crypto.randomUUID()
             invoice.totalAmount = Number(invoice.totalAmount.toString().replace('.','').replace(',','.'))
-            await setDoc(doc(db, `data/invoices/${user.uid}`, invoice.id), invoice).then((response) => {
+            await setDoc(doc(db, `data/invoices/${user.uid}`, invoice.id), invoice).then(() => {
                 console.log("Invoice created");
 
                 navigate('/')
