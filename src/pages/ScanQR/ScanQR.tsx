@@ -16,7 +16,6 @@ const ScanQR = () => {
             </div>
             <Scanner
                 onScan={(detectedCodes) => {
-                    console.log(detectedCodes)
                     detectedCodes.forEach((detectedCode) => {
                         if (detectedCode.rawValue.startsWith("https://suf.purs.gov.rs/")) {
                             if (!executed) {
@@ -24,7 +23,6 @@ const ScanQR = () => {
                                 processInvoice(detectedCode.rawValue, isSimpleProcess).then(() => {
                                     console.log('Processed successfully');
                                 })
-                                console.log(detectedCode.rawValue);
                             }
                         }
                     })

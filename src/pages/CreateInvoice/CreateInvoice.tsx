@@ -24,7 +24,6 @@ export interface CreateInvoiceProps {
 }
 
 const CreateInvoicePage = ({oldInvoice}: CreateInvoiceProps) => {
-    console.log(oldInvoice)
     const [invoice, setInvoice] = useState<Invoice>(
         oldInvoice ?? {
             id: crypto.randomUUID(),
@@ -61,7 +60,6 @@ const CreateInvoicePage = ({oldInvoice}: CreateInvoiceProps) => {
     const handleMark = (e: Ui5CustomEvent<SwitchDomRef>) => {
         const updatedInvoice = {...invoice, [e.target.name]: e.target.checked}
         setInvoice(updatedInvoice)
-        console.log(invoice)
     }
 
 
@@ -140,7 +138,6 @@ const CreateInvoicePage = ({oldInvoice}: CreateInvoiceProps) => {
                                  navigate('/')
                              })
                          }
-                         console.log(invoice)
                      }}>Save</Button>
                      <Button
                          onClick={() => {

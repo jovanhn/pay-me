@@ -33,7 +33,6 @@ export const useInvoiceProcessor = () => {
             const hourMatch: RegExpMatchArray | null = timeString.match(hourRegex);
 
             // If hour part is found
-            console.log(timeString);
             if (hourMatch) {
                 let hour: string = hourMatch[1];
                 // Convert to two digits
@@ -50,17 +49,14 @@ export const useInvoiceProcessor = () => {
 
             // Convert the JavaScript Date object to a Firestore Timestamp
             const timestamp = Timestamp.fromDate(dateObject);
-            console.log(timestamp);
             response.data.dateTime = timestamp
 
             setData(response.data);
             const invoice = response.data as Invoice;
             invoice.id = crypto.randomUUID()
-            console.log(invoice.totalAmount)
             invoice.totalAmount = Number(invoice.totalAmount.toString().replace('.','').replace(',','.'))
             await setDoc(doc(db, `data/invoices/${user.uid}`, invoice.id), invoice).then((response) => {
                 console.log("Invoice created");
-                console.log(response)
 
                 navigate('/')
             }).catch((errorInserting) => {

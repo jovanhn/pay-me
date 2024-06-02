@@ -7,7 +7,6 @@ const initialDateState = (): Date => {
     const currentMonth = new Date();
     currentMonth.setDate(1)
     currentMonth.setHours(0, 0, 0, 0)
-    console.log(currentMonth)
     return currentMonth;
 }
 

@@ -27,7 +27,6 @@ const InvoiceCard = ({invoice, refetch}: InvoiceCardProps) => {
             refetch()
         })
     }
-    console.log(invoice.items)
     return (
         <Card
             style={{padding: '0.5rem 0'}}
