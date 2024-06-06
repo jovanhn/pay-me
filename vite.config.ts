@@ -7,4 +7,9 @@ export default defineConfig({
   build: {
     outDir: 'build',
   },
+  server: {
+    proxy: {
+      "/v": "https://suf.purs.gov.rs",
+    },
+  },
 })

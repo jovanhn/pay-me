@@ -21,25 +21,25 @@ const Home = () => {
                 <Button
                     icon="navigation-left-arrow"
                     design="Transparent"
-                    style={{height: "4rem" , width:"4rem"}}
+                    style={{height: "4rem", width: "4rem"}}
                     onClick={() => {
-                    const newDate = new Date(date)
-                    newDate.setMonth(date.getMonth() - 1)
-                    setDate(newDate);
-                }}/>
+                        const newDate = new Date(date)
+                        newDate.setMonth(date.getMonth() - 1)
+                        setDate(newDate);
+                    }}/>
                 <FlexBox direction="Column" style={{padding: "0 3rem"}} alignItems="Center">
                     <Title level="H3">{date.toLocaleDateString('en-us', {month: "long", year: "numeric"})}</Title>
                     <Title level="H3">{monthExpenses.toLocaleString()} RSD</Title>
                 </FlexBox>
                 <Button
                     icon="navigation-right-arrow"
-                    style={{height: "4rem" , width:"4rem"}}
+                    style={{height: "4rem", width: "4rem"}}
                     design="Transparent"
                     onClick={() => {
-                    const newDate = new Date(date)
-                    newDate.setMonth(date.getMonth() + 1)
-                    setDate(newDate);
-                }}/>
+                        const newDate = new Date(date)
+                        newDate.setMonth(date.getMonth() + 1)
+                        setDate(newDate);
+                    }}/>
             </FlexBox>
             <FlexBox alignItems="Center" justifyContent="SpaceBetween" style={{padding: "0 1rem"}}>
             <Button

@@ -6,9 +6,6 @@ import {db} from "../firebase.tsx";
 import {useCurrentUser} from "../auth/AuthProvider.tsx";
 import {useNavigate} from "react-router-dom";
 
-const serivceUrl = "https://invoice-processor.onrender.com/process"
-const simpleServiceUrl = "https://invoice-processor.onrender.com/simple/process"
-
 export const useInvoiceProcessor = () => {
     const [data, setData] = useState<Invoice>();
     const [error, setError] = useState<string>();
@@ -17,13 +14,13 @@ export const useInvoiceProcessor = () => {
     const navigate = useNavigate();
 
 
-    const processInvoice = async (qr_text: string, isSimpleService: boolean) => {
+    const processInvoice = async (qr_text: string) => {
         setIsLoading(true);
         try {
             // this spins server if it is down
             // await axios.get('https://invoice-processor.onrender.com/')
 
-            const response = await axios.post(isSimpleService? simpleServiceUrl: serivceUrl, {url: qr_text});
+            const response = await axios.post(qr_text);
             const dateString = response.data.dateTime.split(' ')[0];
             let timeString = response.data.dateTime.split(' ')[1];
 
