@@ -10,6 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/v": "https://suf.purs.gov.rs",
+      // "/todos": "https://jsonplaceholder.typicode.com",
     },
   },
 })

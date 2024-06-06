@@ -1,6 +1,6 @@
 import InvoicesList from "../../components/Invoices/InvoicesList.tsx";
 import {Button, FlexBox, Title} from "@ui5/webcomponents-react";
-import {useState} from "react";
+import { useState} from "react";
 import {useNavigate} from "react-router-dom";
 
 const initialDateState = (): Date => {
