@@ -5,7 +5,7 @@ import Home from "../pages/Home/Home.tsx";
 import UserProfile from "../pages/UserProfile/UserProfile.tsx";
 import ScanQR from "../pages/ScanQR/ScanQR.tsx";
 import CreateInvoice from "../pages/CreateInvoice/CreateInvoice.tsx";
-import InvoiceDetails from "../pages/InvoiceDetails/InvoiceDetails.tsx";
+import InvoiceOverview from "../pages/InvoiceOverview/InvoiceOverview.tsx";
 
 const routesList = RoutesList
 
@@ -27,7 +27,7 @@ const RoutesConfig: RouteObject[] = routesList.map((route): RouteObject => {
             component = <CreateInvoice/>
             break
         case RouteIDs.INVOICE_DETAILS:
-            component = <InvoiceDetails/>
+            component = <InvoiceOverview/>
             break
         default:
             // Handle any other routes if needed

@@ -5,11 +5,13 @@ import {doc, getDoc} from "firebase/firestore";
 import {auth, db} from "../../firebase.tsx";
 import {Invoice} from "../../interfaces/entities.tsx";
 import {Loader} from "@ui5/webcomponents-react";
+import InvoiceDetails from "./InvoiceDetails/InvoiceDetails.tsx";
 
 
-const InvoiceDetails = () => {
+const InvoiceOverview = () => {
     const {invoiceId} = useParams()
     const [invoice, setInvoice] = useState<Invoice>();
+    const [editMode, setEditMode] = useState<boolean>(false);
 
     useEffect(() => {
         const docRef = doc(db, `data/invoices/${auth.currentUser!.uid}`, invoiceId!);
@@ -27,8 +29,8 @@ const InvoiceDetails = () => {
     if (!invoice) {
         return <Loader/>
     }
-    return (
-        <CreateInvoice oldInvoice={invoice}/>
+    return (editMode ?
+            <CreateInvoice oldInvoice={invoice}/> : <InvoiceDetails invoice={invoice} setEditMode={setEditMode}/>
     )
 }
-export default InvoiceDetails
+export default InvoiceOverview
