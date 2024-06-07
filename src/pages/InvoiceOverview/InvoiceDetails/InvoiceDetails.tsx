@@ -9,6 +9,7 @@ import {
     Avatar, Title, List, StandardListItem
 } from "@ui5/webcomponents-react";
 import {Invoice} from "../../../interfaces/entities.tsx";
+import {useNavigate} from "react-router-dom";
 
 interface InvoiceDetailsProps {
     invoice: Invoice
@@ -16,7 +17,7 @@ interface InvoiceDetailsProps {
 }
 
 const InvoiceDetails = ({invoice, setEditMode}: InvoiceDetailsProps) => {
-
+    const navigate = useNavigate()
     return (
         <ObjectPage
             headerContent={<DynamicPageHeader>
@@ -31,7 +32,7 @@ const InvoiceDetails = ({invoice, setEditMode}: InvoiceDetailsProps) => {
             headerContentPinnable
             headerTitle={<DynamicPageTitle
                 actions={<><Button design="Transparent" onClick={()=> {setEditMode(true)}}>Edit</Button></>}
-                header="Invoice Details" showSubHeaderRight
+                header={<><FlexBox alignItems="Center"><Button icon="arrow-left" design="Transparent" onClick={()=> navigate(-1)}/><Title level="H4">Back</Title></FlexBox></>} showSubHeaderRight
             ></DynamicPageTitle>}
             image={<Avatar icon="retail-store"/>}
             imageShapeCircle

@@ -1,9 +1,6 @@
-import  {useState} from "react";
-import {Button, Card, CardHeader, Icon, List, Modals, StandardListItem} from "@ui5/webcomponents-react";
-import {Invoice, Item} from "../../interfaces/entities.tsx";
-import {useCurrentUser} from "../../auth/AuthProvider.tsx";
-import {deleteDoc, doc} from "firebase/firestore";
-import {db} from "../../firebase.tsx";
+import { Card, CardHeader, Icon} from "@ui5/webcomponents-react";
+import {Invoice} from "../../interfaces/entities.tsx";
+
 import {useNavigate} from "react-router-dom";
 
 interface InvoiceCardProps {
@@ -11,85 +8,51 @@ interface InvoiceCardProps {
     refetch: () => void,
 }
 
-const InvoiceCard = ({invoice, refetch}: InvoiceCardProps) => {
-    const [opened, setOpened] = useState(false)
-    const {user} = useCurrentUser()
+const InvoiceCard = ({invoice}: InvoiceCardProps) => {
+    // const [opened, setOpened] = useState(false)
+    // const {user} = useCurrentUser()
     const navigate = useNavigate()
-    const handleOpenClose = () => {
-        if (invoice.items?.length > 0) {
-            setOpened(!opened)
-        }
-    }
-    const showPopover = Modals.useShowPopover()
-
-    const handleDelete = (id: string) => {
-        void deleteDoc(doc(db, `data/invoices/${user.uid}`, id)).then(() => {
-            refetch()
-        })
-    }
+    // const handleOpenClose = () => {
+    //     if (invoice.items?.length > 0) {
+    //         setOpened(!opened)
+    //     }
+    // }
+    // const showPopover = Modals.useShowPopover()
+    //
+    // const handleDelete = (id: string) => {
+    //     void deleteDoc(doc(db, `data/invoices/${user.uid}`, id)).then(() => {
+    //         refetch()
+    //     })
+    // }
     return (
         <Card
+            onClick={() => {
+                console.log("InvoiceSelected");
+            }}
+            // onClickCapture={() => {
+            //     console.log("InvoiceSelected");
+            //     navigate(`/invoices/${invoice.id}`, {})
+            //
+            // }}
             style={{padding: '0.5rem 0'}}
             header={
                 <CardHeader
+                    onClickCapture={() => {
+                        console.log("InvoiceSelected");
+                        navigate(`/invoices/${invoice.id}`, {})
+
+                    }}
+                    onSelect={() => {
+                        console.log("InvoiceSelected");
+                    }}
                     avatar={<Icon name="basket"/>}
                     status={invoice.dateTime.toDate().toLocaleDateString('en-us', {month: "long", day: "numeric", hour:"numeric", minute:"numeric"})}
                     subtitleText={`${invoice.totalAmount} RSD`}
                     titleText={invoice.shopFullName}
-                    action={
-                        <>
-                            <Button onClick={handleOpenClose} icon={opened ? "collapse" : "expand"}
-                                    design="Transparent"/>
-                            <Button
-                                id={`openMoreBtn${invoice.id}`}
-                                onClick={() => {
-                                    const {close} = showPopover({
-                                        opener: `openMoreBtn${invoice.id}`,
-                                        children: (<List separators="None" data-testid="more-menu">
-                                            <StandardListItem
-                                                iconEnd
-                                                icon="detail-more"
-                                                onClick={() => {
-                                                    navigate(`/invoices/${invoice.id}`, {})
-                                                }}
-                                                data-testid="userMenuSettings"
-                                            >
-                                                Details
-                                            </StandardListItem>
-                                            <StandardListItem
-                                                icon="delete"
-                                                iconEnd
-                                                onClick={() => {
-                                                    handleDelete(invoice.id)
-                                                    close()
-                                                }}
-                                            >
-                                                Delete
-                                            </StandardListItem>
-                                        </List>)
-                                    })
-                                }
-                                }
-                                icon="overflow"
-                                design="Transparent"/>
-                        </>
-                    }
                 />
             }
 
-        >
-            {opened && invoice.items && (
-
-                <List mode="SingleSelect">
-                    {invoice.items.map((item: Item) =>
-                        <StandardListItem
-                            key={item.name}
-                            description={`${item.amount} x ${item.priceWithVat} RSD = ${item.totalPrice} RSD`}>
-                            {item.name}
-                        </StandardListItem>)}
-                </List>)
-            }
-        </Card>
+        />
     )
 }
 
