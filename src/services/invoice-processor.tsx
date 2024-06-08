@@ -7,6 +7,9 @@ import {useCurrentUser} from "../auth/AuthProvider.tsx";
 import {useNavigate} from "react-router-dom";
 import {qrExtractorHtml} from "./local-process-invoice.tsx";
 
+const backendEndpoint = "https://invoice-processor.onrender.com/process"
+
+
 export const useInvoiceProcessor = () => {
     const [data, setData] = useState<Invoice>();
     const [error, setError] = useState<string>();
@@ -23,7 +26,7 @@ export const useInvoiceProcessor = () => {
             // this spins server if it is down
             // await axios.get('https://invoice-processor.onrender.com/')
 
-            const response = await axios.post(qr_text);
+            const response = await axios.post(backendEndpoint, {url:qr_text});
             const dateString = response.data.dateTime.split(' ')[0];
             let timeString = response.data.dateTime.split(' ')[1];
 
