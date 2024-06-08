@@ -22,7 +22,6 @@ const InvoiceDetails = ({invoice, setEditMode}: InvoiceDetailsProps) => {
         <ObjectPage
             headerContent={<DynamicPageHeader>
                 <FlexBox direction="Column">
-                    <Title level="H3">{invoice.shopFullName}</Title>
                     <Title level="H5"
                            style={{marginBottom: "0.5rem"}}>{invoice.totalAmount.toLocaleString()} RSD</Title>
                     <Label>{invoice.address}</Label>
@@ -31,8 +30,16 @@ const InvoiceDetails = ({invoice, setEditMode}: InvoiceDetailsProps) => {
             </DynamicPageHeader>}
             headerContentPinnable
             headerTitle={<DynamicPageTitle
-                actions={<><Button design="Transparent" onClick={()=> {setEditMode(true)}}>Edit</Button></>}
-                header={<><FlexBox alignItems="Center"><Button icon="arrow-left" design="Transparent" onClick={()=> navigate(-1)}/><Title level="H4">Back</Title></FlexBox></>} showSubHeaderRight
+                actions={<>
+                    <Button design="Transparent" onClick={() => {
+                        setEditMode(true)
+                    }}>Edit</Button>
+                    <Button design="Transparent" onClick={() => {
+                        navigate(-1)
+                    }} icon='decline'/>
+                </>}
+                header={<Title level="H3">{invoice.shopFullName}</Title>}
+                showSubHeaderRight
             ></DynamicPageTitle>}
             image={<Avatar icon="retail-store"/>}
             imageShapeCircle

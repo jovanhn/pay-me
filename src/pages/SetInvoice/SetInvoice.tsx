@@ -9,21 +9,28 @@ import {
     Label,
     Select,
     Switch,
-    TextArea, Ui5CustomEvent, InputDomRef, SelectDomRef, SwitchDomRef, DateTimePicker
+    TextArea,
+    Ui5CustomEvent,
+    InputDomRef,
+    SelectDomRef,
+    SwitchDomRef,
+    DateTimePicker,
 } from "@ui5/webcomponents-react"
 import {useState} from "react";
 import {Invoice} from "../../interfaces/entities.tsx";
-import {Timestamp} from "firebase/firestore";
+import {Timestamp, deleteDoc, doc} from "firebase/firestore";
 import {SelectChangeEventDetail} from "@ui5/webcomponents/dist/Select.js";
 import {saveInvoice} from "../../services/Invoices.tsx";
-import {auth} from "../../firebase.tsx";
+import {auth, db} from "../../firebase.tsx";
 import {useNavigate} from "react-router-dom";
 
 export interface CreateInvoiceProps {
     oldInvoice?: Invoice
+    editMode?: boolean
 }
 
-const CreateInvoicePage = ({oldInvoice}: CreateInvoiceProps) => {
+const CreateInvoicePage = ({oldInvoice, editMode}: CreateInvoiceProps) => {
+    const userId = auth.currentUser?.uid
     const [invoice, setInvoice] = useState<Invoice>(
         oldInvoice ?? {
             id: crypto.randomUUID(),
@@ -39,6 +46,13 @@ const CreateInvoicePage = ({oldInvoice}: CreateInvoiceProps) => {
     const [customDateDisabled, setCustomDateDisabled] = useState(true)
 
     const navigate = useNavigate();
+
+    const handleDelete = () => {
+        void deleteDoc(doc(db, `data/invoices/${userId}`, invoice.id)).then(() => {
+            console.log("Invoice deleted");
+            navigate('/')
+        })
+    }
 
 
     const handleCurrencySelectChange = (e: Ui5CustomEvent<SelectDomRef, SelectChangeEventDetail>) => {
@@ -96,7 +110,7 @@ const CreateInvoicePage = ({oldInvoice}: CreateInvoiceProps) => {
                             value={invoice.totalAmount.toString()}
                             onInput={(e) => handleFormInputChangeNumeric(e)}/>
                         <Select
-                            style={{width:'3.2rem'}}
+                            style={{width: '3.2rem'}}
                             value={invoice.currency}
                             onChange={(e) => handleCurrencySelectChange(e)}>
                             <Option>RSD</Option>
@@ -105,7 +119,7 @@ const CreateInvoicePage = ({oldInvoice}: CreateInvoiceProps) => {
                     </FormItem>
 
                     <FormItem label="Custom date">
-                        <Switch name="marked" onChange={(e => {
+                        <Switch name="customDateMark" onChange={(e => {
                             setCustomDateDisabled(!e.target.checked)
                         })}/>
                         <DateTimePicker disabled={customDateDisabled} value={invoice.dateTime.toDate().toString()}
@@ -125,10 +139,17 @@ const CreateInvoicePage = ({oldInvoice}: CreateInvoiceProps) => {
                         />
                     </FormItem>
                     <FormItem label="Mark">
-                        <Switch name="marked" onChange={(e) => handleMark(e)}/>
+                        <Switch name="marked" checked={invoice.marked} onChange={(e) => handleMark(e)}/>
                     </FormItem>
                 </FormGroup>
             </Form>
+            {editMode &&
+                <Button
+                    onClick={() => handleDelete()}
+                    design="Negative"
+                    icon="delete"
+                    style={{marginBottom: "1rem"}}>Delete invoice</Button>
+            }
             <Bar design="FloatingFooter"
                  endContent={<>
                      <Button disabled={(invoice.shopFullName === '' || invoice.totalAmount === 0)}
@@ -141,7 +162,7 @@ const CreateInvoicePage = ({oldInvoice}: CreateInvoiceProps) => {
                      }}>Save</Button>
                      <Button
                          onClick={() => {
-                             navigate('/')
+                             navigate(-1)
                          }}
                          design="Transparent">
                          Cancel

@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import CreateInvoice from "../CreateInvoice/CreateInvoice.tsx";
+import SetInvoice from "../SetInvoice/SetInvoice.tsx";
 import {useEffect, useState} from "react";
 import {doc, getDoc} from "firebase/firestore";
 import {auth, db} from "../../firebase.tsx";
@@ -30,7 +30,7 @@ const InvoiceOverview = () => {
         return <Loader/>
     }
     return (editMode ?
-            <CreateInvoice oldInvoice={invoice}/> : <InvoiceDetails invoice={invoice} setEditMode={setEditMode}/>
+            <SetInvoice oldInvoice={invoice} editMode={editMode}/> : <InvoiceDetails invoice={invoice} setEditMode={setEditMode}/>
     )
 }
 export default InvoiceOverview
