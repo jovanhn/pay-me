@@ -1,14 +1,16 @@
 import {Scanner} from "@yudiel/react-qr-scanner";
 import {Label, Loader, Switch, Text} from "@ui5/webcomponents-react";
 import { useState} from "react";
-import {useInvoiceProcessor, useInvoiceSimpleProcessor} from "../../services/invoice-processor.tsx";
+import {useInvoiceProcessor,
+    // useInvoiceSimpleProcessor
+} from "../../services/invoice-processor.tsx";
 
 import axios from "axios";
 
 const backendEndpoint = "https://invoice-processor.onrender.com"
 const ScanQR = () => {
     const {data, error, isLoading, processInvoice} = useInvoiceProcessor();
-    const { isLoading: simpleIsLoading, processSimpleInvoice} = useInvoiceSimpleProcessor();
+    // const { isLoading: simpleIsLoading, processSimpleInvoice} = useInvoiceSimpleProcessor();
     const [executed, setExecuted] = useState(false);
     const [advancedProcessing, setAdvancedProcessing] = useState(false);
 
@@ -16,7 +18,7 @@ const ScanQR = () => {
     return (<>
             <div style={{display: "flex"}}>
                 <Label style={{alignItems: 'center'}}>Advanced processing</Label>
-                <Switch onChange={(e) => {
+                <Switch checked ={advancedProcessing} onChange={(e) => {
                     if (!advancedProcessing) {
                         axios.get(backendEndpoint).then((response) => {
                             console.log("Backend live:", response)
@@ -32,7 +34,7 @@ const ScanQR = () => {
                             if (!executed) {
                                 setExecuted(true);
                                 if (!advancedProcessing) {
-                                    processSimpleInvoice(detectedCode.rawValue).then(()=> {
+                                    processInvoice(detectedCode.rawValue).then(()=> {
                                         console.log("Simple invoice created");
                                     })
                                 } else {
@@ -47,7 +49,7 @@ const ScanQR = () => {
 
                 }}
             />
-            {(isLoading || simpleIsLoading) && <Loader/>}
+            {(isLoading) && <Loader/>}
             {data && 'QR processed'}
             {error && <Text>{error}</Text>}
 
