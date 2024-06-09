@@ -5,11 +5,12 @@ import {
     signInWithPopup,
     User
 } from "firebase/auth";
-import React, {createContext, ReactElement, useState} from "react";
+import React, {createContext, ReactElement, useEffect, useState} from "react";
 import { Button, FlexBox, IllustratedMessage, Loader, Title} from "@ui5/webcomponents-react";
 import {auth} from "../firebase.tsx";
 import "@ui5/webcomponents-fiori/dist/illustrations/tnt/Calculator"
 import styles from "./AuthProvider.module.scss"
+import axios from "axios";
 
 
 interface Props {
@@ -20,6 +21,9 @@ interface UserContext {
     user: User,
     setUser: (user: User) => void
 }
+
+const backendEndpoint = "https://invoice-processor.onrender.com"
+
 
 const AuthContext = createContext({} as UserContext)
 
@@ -38,6 +42,13 @@ const AuthProvider = ({children}: Props): ReactElement => {
 
     auth.beforeAuthStateChanged(function () {
         setLoading(true);
+    })
+
+    // TODO: Remove this after deploying BE on server where it does not shut down after idle time
+    useEffect(()=> {
+        axios.get(backendEndpoint).then(()=> {
+            console.log("Backend live:", backendEndpoint)
+        })
     })
 
     const handleGoogleSignIn = () => {
