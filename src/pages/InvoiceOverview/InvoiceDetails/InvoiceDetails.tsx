@@ -6,7 +6,7 @@ import {
     DynamicPageTitle,
     Label,
     Text,
-    Avatar, Title, List, StandardListItem
+    Avatar, Title, List, StandardListItem, Bar, Link
 } from "@ui5/webcomponents-react";
 import {Invoice} from "../../../interfaces/entities.tsx";
 import {useNavigate} from "react-router-dom";
@@ -20,6 +20,8 @@ const InvoiceDetails = ({invoice, setEditMode}: InvoiceDetailsProps) => {
     const navigate = useNavigate()
     return (
         <ObjectPage
+            // TODO: Remove line below
+            footer={<><Bar><Link href={"https://online.mobibanka.rs/ips/ek/fl/?data=SzpQUnxWOjAxfEM6MXxSOjExNTAzODE2MzgxNzgxODYzNHxOOkpvdmFuIFN1YmVyaWN8STpSU0QxMDAsMXxTRjoyODk=&callback=https://sparesquare.xyz"}> Pay</Link></Bar></>}
             headerContent={<DynamicPageHeader>
                 <FlexBox direction="Column">
                     <Title level="H5"
@@ -49,7 +51,7 @@ const InvoiceDetails = ({invoice, setEditMode}: InvoiceDetailsProps) => {
                 height: '700px'
             }}
         >
-            <List>
+            <List mode="MultiSelect">
                 {invoice.items?.map((item) => {
                     return (<StandardListItem
                         key={item.id}
