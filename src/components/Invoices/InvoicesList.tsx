@@ -22,7 +22,7 @@ const InvoicesList = ({date, setMonthExpenses}: InvoicesListProps) => {
         const dateTimeTo = new Date(date)
         dateTimeTo.setMonth(date.getMonth() + 1)
         const timestampTo = Timestamp.fromDate(dateTimeTo)
-        const colRef = collection(db, "data/invoices", user.uid);
+        const colRef = collection(db, "data/invoices", user!.uid);
         const q = query(colRef,
             where("dateTime", ">=", timestampFrom),
             where("dateTime", "<", timestampTo),

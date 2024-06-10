@@ -72,7 +72,7 @@ const UserProfileDetailsForm = () => {
 
     const fetchUserInfo = async () => {
 
-        const docRef = doc(db, "users", user.uid);
+        const docRef = doc(db, "users", user!.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             console.log("Document data:", docSnap.data() as UserProfile);
@@ -90,7 +90,7 @@ const UserProfileDetailsForm = () => {
 
     const updateUserInfo = async () => {
         try {
-            await setDoc(doc(db, "users", user.uid), form);
+            await setDoc(doc(db, "users", user!.uid), form);
             console.log("Document written with ID: ");
         } catch (e) {
             console.error("Error adding document: ", e);

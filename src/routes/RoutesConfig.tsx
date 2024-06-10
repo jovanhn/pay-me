@@ -6,12 +6,15 @@ import UserProfile from "../pages/UserProfile/UserProfile.tsx";
 import ScanQR from "../pages/ScanQR/ScanQR.tsx";
 import CreateInvoice from "../pages/SetInvoice/SetInvoice.tsx";
 import InvoiceOverview from "../pages/InvoiceOverview/InvoiceOverview.tsx";
+import ProtectedRoute from "./ProtectedRoute.tsx";
+import SharedInvoice from "../pages/SharedInvoice/SharedInvoice.tsx";
+import {ReactNode} from "react";
 
 const routesList = RoutesList
 
 const RoutesConfig: RouteObject[] = routesList.map((route): RouteObject => {
     console.log(route.id)
-    let component: any = null
+    let component: ReactNode = null
 
     switch (route.id) {
         case RouteIDs.HOME:
@@ -29,13 +32,16 @@ const RoutesConfig: RouteObject[] = routesList.map((route): RouteObject => {
         case RouteIDs.INVOICE_DETAILS:
             component = <InvoiceOverview/>
             break
+        case RouteIDs.SHARED_INVOICE:
+            component = <SharedInvoice/>
+            break
         default:
             // Handle any other routes if needed
             break
     }
     return {
         ...route,
-        element: component,
+        element: route.isPublic? component : <ProtectedRoute>{component}</ProtectedRoute>,
     }
 })
 

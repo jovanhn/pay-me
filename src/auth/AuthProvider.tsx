@@ -1,15 +1,15 @@
 import {
-    browserSessionPersistence,
+    // browserSessionPersistence,
+    browserLocalPersistence,
     GoogleAuthProvider,
     setPersistence,
     signInWithPopup,
     User
 } from "firebase/auth";
-import React, {createContext, ReactElement, useEffect, useState} from "react";
-import { Button, FlexBox, IllustratedMessage, Loader, Title} from "@ui5/webcomponents-react";
+import {createContext, ReactElement, useContext, useEffect, useState} from "react";
+import {Loader} from "@ui5/webcomponents-react";
 import {auth} from "../firebase.tsx";
 import "@ui5/webcomponents-fiori/dist/illustrations/tnt/Calculator"
-import styles from "./AuthProvider.module.scss"
 import axios from "axios";
 
 
@@ -18,8 +18,9 @@ interface Props {
 }
 
 interface UserContext {
-    user: User,
-    setUser: (user: User) => void
+    user: User | null,
+    handleGoogleSignIn: () => void
+    handleLogout: () => void
 }
 
 const backendEndpoint = "https://invoice-processor.onrender.com"
@@ -45,14 +46,14 @@ const AuthProvider = ({children}: Props): ReactElement => {
     })
 
     // TODO: Remove this after deploying BE on server where it does not shut down after idle time
-    useEffect(()=> {
-        axios.get(backendEndpoint).then(()=> {
+    useEffect(() => {
+        axios.get(backendEndpoint).then(() => {
             console.log("Backend live:", backendEndpoint)
         })
     })
 
     const handleGoogleSignIn = () => {
-        setPersistence(auth, browserSessionPersistence)
+        setPersistence(auth, browserLocalPersistence)
             .then(() => {
                 signInWithPopup(auth, googleProvider)
                     .then(result => {
@@ -65,22 +66,25 @@ const AuthProvider = ({children}: Props): ReactElement => {
             })
     }
 
+    // TODO: Implement logout
+    const handleLogout = () => {
+
+        setUser(null);
+
+    }
+
+    const value: UserContext = {
+        user,
+        handleGoogleSignIn,
+        handleLogout
+    };
+
     if (loading) {
         return <Loader/>
     }
 
-    if (!user) {
-        return (
-            <FlexBox direction="Column" alignItems="Center" className={styles['container']}>
-                <IllustratedMessage name="TntCalculator"/>
-                <Title>SpareSquare</Title>
-                <Button onClick={handleGoogleSignIn} icon="visits" iconEnd> Sign in with Google</Button>
-            </FlexBox>
-        )
-    }
-
     return (
-        <AuthContext.Provider value={{user, setUser}}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     )
@@ -89,4 +93,4 @@ const AuthProvider = ({children}: Props): ReactElement => {
 
 export default AuthProvider
 
-export const useCurrentUser = () => React.useContext(AuthContext)
+export const useCurrentUser = () => useContext(AuthContext)

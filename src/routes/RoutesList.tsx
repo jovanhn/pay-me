@@ -30,6 +30,12 @@ const RoutesList = [
         isMainNavigation: false,
         path: '/invoices/:invoiceId',
         translation: 'app.nav.create-new-invoice-manual',
+    },
+    {
+        id: RouteIDs.SHARED_INVOICE,
+        isMainNavigation: false,
+        path: '/shared/:invoiceId',
+        isPublic: true,
     }
 ]
 
