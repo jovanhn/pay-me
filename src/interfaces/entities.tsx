@@ -39,3 +39,9 @@ export interface Item {
     priceWithVat: number,
     totalPrice: number
 }
+
+export interface SharedInvoice  extends Invoice{
+    userId: string,
+    userName: string,
+    accountNumber: string
+}
