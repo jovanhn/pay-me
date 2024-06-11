@@ -4,7 +4,7 @@ import {
     DynamicPageHeader,
     DynamicPageTitle,
     FlexBox,
-    Label, List,
+    Label, Link, List,
     Loader,
     ObjectPage, StandardListItem,
     Text,
@@ -54,6 +54,11 @@ const SharedInvoice = () => {
                                 <Button design="Transparent" onClick={() => {
                                     window.location.reload();
                                 }} icon='cancel'>Reset</Button>
+                                <Link
+                                    onClick={()=> {
+                                        console.log('test 1:','https://online.mobibanka.rs/ips/ek/fl/?data=SzpQUnxWOjAxfEM6MXxSOjExNTAzODE2MzgxNzgxODYzNHxOOkpvdmFuIFN1YmVyaWN8STpSU0QxMDAsMXxTRjoyODk=&callback=https://sparesquare.xyz')
+                                    }}
+                                    href="https://online.mobibanka.rs/ips/ek/fl/?data=SzpQUnxWOjAxfEM6MXxSOjExNTAzODE2MzgxNzgxODYzNHxOOkpvdmFuIFN1YmVyaWN8STpSU0QxMDAsMXxTRjoyODk=&callback=https://sparesquare.xyz">Test</Link>
                             </FlexBox>
                         </FlexBox>
                     </DynamicPageHeader>}

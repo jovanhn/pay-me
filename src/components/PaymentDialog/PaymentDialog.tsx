@@ -32,7 +32,7 @@ const PaymentDialog = ({isOpen, setIsOpen, paymentAmount, setPaymentAmount, shar
 
     const renderQRCode = () => {
         console.log(  )
-        return <FlexBox direction="Column" alignItems="Center" style={{minWidth: "400px"}}>
+        return <FlexBox direction="Column" alignItems="Center" >
             {/*<QRCode style={{padding: "1rem 0"}} value={generateIPS(sharedInvoice.bankAccount.replace('-','').replace('-',''), sharedInvoice.userName, paymentAmount.toString().replace('.',','))  }/>*/}
             <QRCode style={{padding: "1rem 0"}} value={generateIPS(sharedInvoice.bankAccount.replace('-','').replace('-',''), sharedInvoice.userName, paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2}).replace(',','').replace('.',','))  }/>
             <Text>Paying: {paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2})} RSD</Text>
@@ -45,6 +45,9 @@ const PaymentDialog = ({isOpen, setIsOpen, paymentAmount, setPaymentAmount, shar
         return (
             <List>
                 <StandardListItem> <Link
+                    onClick={() => {
+                        console.log('test 2:',generateIPSLinkYettel(sharedInvoice.bankAccount.replace('-','').replace('-',''), sharedInvoice.userName, paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2}).replace(',','').replace('.',',')))
+                    }}
                     href={generateIPSLinkYettel(sharedInvoice.bankAccount.replace('-','').replace('-',''), sharedInvoice.userName, paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2}).replace(',','').replace('.',','))}>Yettel
                     Bank</Link></StandardListItem>
                 <StandardListItem>Banca Intesa</StandardListItem>
