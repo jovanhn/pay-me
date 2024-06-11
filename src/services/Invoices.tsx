@@ -44,7 +44,7 @@ export const shareInvoice = async (invoiceId: string, userId: string) => {
     const invoice = await getInvoice(invoiceId)
     const userData = await getUserData(userId)
 
-    const newSharedInvoice = {...invoice, userId: userId, userName: userData!.generalInfo.name, bankAccount: userData!.bankInfo.account_number}
+    const newSharedInvoice = {...invoice, createdBy: auth.currentUser?.uid, userId: userId, userName: userData!.generalInfo.name, bankAccount: userData!.bankInfo.account_number}
     console.log("Shared Invoice created", newSharedInvoice);
     await setDoc(doc(db, `data/shared/invoices`, invoiceId), newSharedInvoice).then((response) => {
         console.log("Shared Invoice created");
@@ -72,6 +72,13 @@ export const useSharedInvoice =  (invoiceId: string) => {
     }, []);
 
     return {isError, isLoading, sharedInvoice}
+}
+
+export const deleteSharedInvoice = async (invoiceId: string) => {
+    await deleteDoc(doc(db, `data/shared/invoices`, invoiceId)).then((response) => {
+        console.log("Shared Invoice deleted");
+        return response;
+    })
 }
 
 

@@ -43,5 +43,5 @@ export interface Item {
 export interface SharedInvoice  extends Invoice{
     userId: string,
     userName: string,
-    accountNumber: string
+    bankAccount: string
 }
