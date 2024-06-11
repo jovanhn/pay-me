@@ -22,7 +22,7 @@ interface PaymentDialogProps {
 const generateIPS = (accountNumber: string, name: string, amount: string): string => `K:PR|V:01|C:1|R:${accountNumber}|N:${name}|I:RSD${amount}|SF:289`
 
 const generateIPSLinkYettel = (accountNumber: string, name: string, amount: string) =>
-    `https://online.mobibanka.rs/ips/ek/fl/?data=${btoa(generateIPS(accountNumber, name, amount))}=&callback=https://sparesquare.xyz`
+    `https://online.mobibanka.rs/ips/ek/fl/?data=${btoa(generateIPS(accountNumber, name, amount))}&callback=https://sparesquare.xyz`
 
 
 const PaymentDialog = ({isOpen, setIsOpen, paymentAmount, setPaymentAmount, sharedInvoice}: PaymentDialogProps) => {
