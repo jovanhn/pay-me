@@ -1,10 +1,10 @@
 import {
-    Avatar,
+    Avatar, Bar,
     Button,
     DynamicPageHeader,
     DynamicPageTitle,
     FlexBox,
-    Label, Link, List,
+    Label, List,
     Loader,
     ObjectPage, StandardListItem,
     Text,
@@ -34,6 +34,17 @@ const SharedInvoice = () => {
         return (
             <>
                 <ObjectPage
+                    style={{height: "90vh"}}
+                    footer={<Bar
+                        design="FloatingFooter"
+                    endContent={<>
+                        <Button design="Emphasized" onClick={() => {
+                            setPaymentDialogOpen(true)
+                            setPaymentAmount(selectedSum)
+                        }} icon='money-bills'>Pay {selectedSum.toLocaleString()} RSD</Button>
+                        <Button design="Transparent" onClick={() => {
+                            window.location.reload();
+                        }} icon='cancel'>Reset</Button></>}/>}
                     headerContent={<DynamicPageHeader>
                         <FlexBox justifyContent="SpaceBetween" alignItems="Center">
                             <FlexBox direction="Column">
@@ -41,24 +52,6 @@ const SharedInvoice = () => {
                                        style={{marginBottom: "0.5rem"}}>{sharedInvoice.totalAmount.toLocaleString()} RSD</Title>
                                 <Label>{sharedInvoice.address}</Label>
                                 <Label>{sharedInvoice.dateTime.toDate().toLocaleString()}</Label>
-                            </FlexBox>
-                            <FlexBox direction="Column" alignItems="Baseline">
-                                <Button design="Transparent" onClick={() => {
-                                    setPaymentDialogOpen(true)
-                                    setPaymentAmount(sharedInvoice?.totalAmount)
-                                }} icon='currency'>Pay all</Button>
-                                <Button design="Transparent" onClick={() => {
-                                    setPaymentDialogOpen(true)
-                                    setPaymentAmount(selectedSum)
-                                }} icon='money-bills'>Pay {selectedSum.toLocaleString()}</Button>
-                                <Button design="Transparent" onClick={() => {
-                                    window.location.reload();
-                                }} icon='cancel'>Reset</Button>
-                                <Link
-                                    onClick={()=> {
-                                        console.log('test 1:','https://online.mobibanka.rs/ips/ek/fl/?data=SzpQUnxWOjAxfEM6MXxSOjExNTAzODE2MzgxNzgxODYzNHxOOkpvdmFuIFN1YmVyaWN8STpSU0QxMDAsMXxTRjoyODk=&callback=https://sparesquare.xyz')
-                                    }}
-                                    href="https://online.mobibanka.rs/ips/ek/fl/?data=SzpQUnxWOjAxfEM6MXxSOjExNTAzODE2MzgxNzgxODYzNHxOOkpvdmFuIFN1YmVyaWN8STpSU0QxMDAsMXxTRjoyODk=&callback=https://sparesquare.xyz">Test</Link>
                             </FlexBox>
                         </FlexBox>
                     </DynamicPageHeader>}

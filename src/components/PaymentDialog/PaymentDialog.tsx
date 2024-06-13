@@ -87,16 +87,18 @@ const PaymentDialog = ({isOpen, setIsOpen, paymentAmount, setPaymentAmount, shar
                         </SegmentedButtonItem>
                     </React.Fragment>
                 </SegmentedButton>
-                {editMode ?
-                    <Input style={{width: "150px"}} type="Number" value={paymentAmount.toString()}
-                           onChange={(e) => setPaymentAmount(Number(e.target.value))}/>
-                    : <Text>{paymentAmount}</Text>}
-                <Text>RSD</Text>
-                <Button icon={editMode ? "accept" : "edit"} onClick={() => {
-                    setEditMode(!editMode)
-                }}/>
+
+
 
             </Toolbar>
+            {editMode ?
+                <Input style={{width: "150px"}} type="Number" value={paymentAmount.toLocaleString()}
+                       onChange={(e) => setPaymentAmount(Number(e.target.value))}/>
+                : <Text>Paying: {paymentAmount.toLocaleString()}</Text>}
+            <Text style={{marginRight: "1rem"}}>RSD</Text>
+            <Button icon={editMode ? "accept" : "edit"} onClick={() => {
+                setEditMode(!editMode)
+            }}/>
             {
                 selectedSegment === 'QR' ? renderQRCode() : renderBanksList()
             }
