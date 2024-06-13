@@ -45,7 +45,7 @@ export const shareInvoice = async (invoiceId: string, userId: string) => {
     const userData = await getUserData(userId)
 
     const newSharedInvoice = {...invoice, createdBy: auth.currentUser?.uid, userId: userId, userName: userData!.generalInfo.name, bankAccount: userData!.bankInfo.account_number}
-    console.log("Shared Invoice created", newSharedInvoice);
+    console.log("Shared Invoice", newSharedInvoice);
     await setDoc(doc(db, `data/shared/invoices`, invoiceId), newSharedInvoice).then((response) => {
         console.log("Shared Invoice created");
         return response;

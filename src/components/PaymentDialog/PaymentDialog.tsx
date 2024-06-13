@@ -21,9 +21,13 @@ interface PaymentDialogProps {
 
 const generateIPS = (accountNumber: string, name: string, amount: string): string => `K:PR|V:01|C:1|R:${accountNumber}|N:${name}|I:RSD${amount}|SF:289`
 
-const generateIPSLinkYettel = (accountNumber: string, name: string, amount: string) =>
-    `https://online.mobibanka.rs/ips/ek/fl/?data=${btoa(generateIPS(accountNumber, name, amount))}&callback=https://sparesquare.xyz`
+const generateIPSLink = (bankUrl: string, accountNumber: string, name: string, amount: string) =>
+    `https://${bankUrl}/ips/ek/fl/?data=${btoa(generateIPS(accountNumber, name, amount))}&callback=https://sparesquare.xyz`
 
+const yettelBank = 'online.mobibanka.rs'
+const intesaBank = 'ipspos.bancaintesa.rs'
+const aikBank = 'ebanking.aikbanka.rs'
+const otpBank = 'ebank.otpbanka.rs'
 
 const PaymentDialog = ({isOpen, setIsOpen, paymentAmount, setPaymentAmount, sharedInvoice}: PaymentDialogProps) => {
     const [selectedSegment, setSelectedSegment] = useState('QR')
@@ -31,10 +35,11 @@ const PaymentDialog = ({isOpen, setIsOpen, paymentAmount, setPaymentAmount, shar
 
 
     const renderQRCode = () => {
-        console.log(  )
-        return <FlexBox direction="Column" alignItems="Center" >
+        console.log()
+        return <FlexBox direction="Column" alignItems="Center">
             {/*<QRCode style={{padding: "1rem 0"}} value={generateIPS(sharedInvoice.bankAccount.replace('-','').replace('-',''), sharedInvoice.userName, paymentAmount.toString().replace('.',','))  }/>*/}
-            <QRCode style={{padding: "1rem 0"}} value={generateIPS(sharedInvoice.bankAccount.replace('-','').replace('-',''), sharedInvoice.userName, paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2}).replace(',','').replace('.',','))  }/>
+            <QRCode style={{padding: "1rem 0"}}
+                    value={generateIPS(sharedInvoice.bankAccount.replace('-', '').replace('-', ''), sharedInvoice.userName, paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2}).replace(',', '').replace('.', ','))}/>
             <Text>Paying: {paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2})} RSD</Text>
             <Text>Paying to: {sharedInvoice.userName}</Text>
             <Text>Paying to account: {sharedInvoice.bankAccount}</Text>
@@ -44,15 +49,23 @@ const PaymentDialog = ({isOpen, setIsOpen, paymentAmount, setPaymentAmount, shar
     const renderBanksList = () => {
         return (
             <List>
-                <StandardListItem> <Link
-                    onClick={() => {
-                        console.log('test 2:',generateIPSLinkYettel(sharedInvoice.bankAccount.replace('-','').replace('-',''), sharedInvoice.userName, paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2}).replace(',','').replace('.',',')))
-                    }}
-                    href={generateIPSLinkYettel(sharedInvoice.bankAccount.replace('-','').replace('-',''), sharedInvoice.userName, paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2}).replace(',','').replace('.',','))}>Yettel
-                    Bank</Link></StandardListItem>
-                <StandardListItem>Banca Intesa</StandardListItem>
-                <StandardListItem>OTP Bank</StandardListItem>
-                <StandardListItem>Addiko Bank</StandardListItem>
+                <StandardListItem>
+                    <Link
+                        href={generateIPSLink(yettelBank, sharedInvoice.bankAccount.replace('-', '').replace('-', ''), sharedInvoice.userName, paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2}).replace(',', '').replace('.', ','))}>
+                        Yettel Bank</Link></StandardListItem>
+                <StandardListItem>
+                    <Link
+                        href={generateIPSLink(intesaBank, sharedInvoice.bankAccount.replace('-', '').replace('-', ''), sharedInvoice.userName, paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2}).replace(',', '').replace('.', ','))}>
+                        Banka Intesa</Link></StandardListItem>
+                <StandardListItem>
+                    <Link
+                        href={generateIPSLink(aikBank, sharedInvoice.bankAccount.replace('-', '').replace('-', ''), sharedInvoice.userName, paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2}).replace(',', '').replace('.', ','))}>
+                        Aik Banka</Link></StandardListItem>
+                <StandardListItem>
+                    <Link
+                        href={generateIPSLink(otpBank, sharedInvoice.bankAccount.replace('-', '').replace('-', ''), sharedInvoice.userName, paymentAmount.toLocaleString(undefined, {minimumFractionDigits: 2}).replace(',', '').replace('.', ','))}>
+                        OTP Banka
+                    </Link></StandardListItem>
             </List>
         )
     }
@@ -87,7 +100,6 @@ const PaymentDialog = ({isOpen, setIsOpen, paymentAmount, setPaymentAmount, shar
                         </SegmentedButtonItem>
                     </React.Fragment>
                 </SegmentedButton>
-
 
 
             </Toolbar>
