@@ -29,7 +29,7 @@ const Home = () => {
                     }}/>
                 <FlexBox direction="Column" style={{padding: "0 3rem"}} alignItems="Center">
                     <Title level="H3">{date.toLocaleDateString('en-us', {month: "long", year: "numeric"})}</Title>
-                    <Title level="H3">{monthExpenses.toLocaleString()} RSD</Title>
+                    <Title level="H3">{monthExpenses.toLocaleString('sr-RS')} RSD</Title>
                 </FlexBox>
                 <Button
                     icon="navigation-right-arrow"

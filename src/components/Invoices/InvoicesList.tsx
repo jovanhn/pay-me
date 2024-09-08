@@ -5,7 +5,7 @@ import {Invoice} from "../../interfaces/entities.tsx";
 import {useCurrentUser} from "../../auth/AuthProvider.tsx";
 import {useEffect, useState} from "react";
 import {Timestamp} from "firebase/firestore";
-import {IllustratedMessage} from "@ui5/webcomponents-react";
+import {IllustratedMessage, Text} from "@ui5/webcomponents-react";
 import "@ui5/webcomponents-fiori/dist/illustrations/NoData"
 
 interface InvoicesListProps {
@@ -47,13 +47,32 @@ const InvoicesList = ({date, setMonthExpenses}: InvoicesListProps) => {
     if (invoices.length === 0) {
         return <IllustratedMessage name="NoData"/>
     }
+    let currentDate:Timestamp
     return (<>
-            {invoices.map((invoice) => (
-                <InvoiceCard
+            {invoices.map((invoice) => {
+                if (currentDate === undefined || !(currentDate.toDate().getDate().toString() === invoice.dateTime.toDate().getDate().toString())) {
+                    currentDate = invoice.dateTime
+                    return (
+                        <>
+                            <Text className="invoices-list-separator-date">{invoice.dateTime.toDate().toLocaleDateString('en-us', {
+                                month: "long",
+                                day: "2-digit",
+                            })}</Text>
+                            <InvoiceCard
+                                key={invoice.id}
+                                invoice={invoice}
+                                refetch={fetchInvoices}/>
+
+
+                        </>
+                    )
+                }
+                currentDate = invoice.dateTime
+                return (<InvoiceCard
                     key={invoice.id}
                     invoice={invoice}
-                    refetch={fetchInvoices}/>
-            ))}
+                    refetch={fetchInvoices}/>)
+            })}
         </>
     )
 }

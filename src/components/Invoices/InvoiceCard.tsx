@@ -46,8 +46,8 @@ const InvoiceCard = ({invoice}: InvoiceCardProps) => {
                         console.log("InvoiceSelected");
                     }}
                     avatar={<Icon name="basket"/>}
-                    status={invoice.dateTime.toDate().toLocaleDateString('en-us', {month: "long", day: "numeric", hour:"numeric", minute:"numeric"})}
-                    subtitleText={`${invoice.totalAmount} RSD`}
+                    status={`at ${invoice.dateTime.toDate().toLocaleString('en-us', { hour:"numeric", minute:"numeric"})}`}
+                    subtitleText={`${invoice.totalAmount.toLocaleString('sr-RS')} RSD`}
                     titleText={invoice.shopFullName}
                 />
             }
