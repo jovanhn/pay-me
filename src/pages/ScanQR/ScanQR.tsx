@@ -30,7 +30,7 @@ const ScanQR = () => {
             <Scanner
                 onScan={(detectedCodes) => {
                     detectedCodes.forEach((detectedCode) => {
-                        if (detectedCode.rawValue.startsWith("https://suf.purs.gov.rs/")) {
+                        if (detectedCode.rawValue.startsWith("https://suf.purs.gov.rs")) {
                             if (!executed) {
                                 setExecuted(true);
                                 if (!advancedProcessing) {
